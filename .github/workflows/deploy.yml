@@ -1,0 +1,29 @@
+name: Push-to-EC2
+
+# Trigger deployment only on push to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to EC2 on main branch push
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository files
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      # Execute remote commands on the EC2 instance
+      - name: Executing remote SSH commands
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo apt-get -y update
+            cd /mnt/esdir
+            ls -al

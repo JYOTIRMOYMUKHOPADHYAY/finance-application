@@ -1,19 +1,36 @@
-FROM node:20-alpine3.20
+FROM node:22-alpine3.20
 
-#Create a app directory
+# Set environment variables to ensure compatibility
+ENV NODE_ENV=production
+
+# Create an app directory
 WORKDIR /app
 
-#Install app dependencies
-COPY package.json ./
-COPY .env ./
-RUN npm install
+# Copy dependency declarations
+COPY package.json package-lock.json* ./
 
+# Install dependencies
+RUN npm install --production && npm cache clean --force
+
+# Copy environment file
+COPY .env /app/.env
+
+# Display environment file for debugging (optional)
+RUN cat /app/.env
+
+# Copy the rest of the application files
 COPY . .
 
-EXPOSE 3000
+# Expose necessary ports
+# EXPOSE 3000
+# EXPOSE 5432
+# EXPOSE 5433
 
-#Build the app
+# Build the app
 RUN npm run build
 
-#Start the app
-CMD ["npm", "start"]
+# Add an explicit entrypoint to avoid potential issues
+ENTRYPOINT ["node"]
+
+# Default command to start the app
+CMD ["dist/index.js"]
