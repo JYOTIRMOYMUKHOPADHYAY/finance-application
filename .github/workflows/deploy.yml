@@ -59,5 +59,3 @@ jobs:
             pm2 ls
             pm2 logs
 
-            # End the SSH session
-            exit
