@@ -24,12 +24,37 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
+            # Update and install required packages
             sudo apt-get -y update
+
+            # Install NVM (Node Version Manager)
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+            # Install Node.js
+            nvm install 22
+            nvm use 22
+            node -v
+            npm -v
+
+            # Navigate to the project directory
             cd /mnt/esdir/finance-application
+
+            # Pull the latest changes from the repository
             git pull origin master
+
+            # Install dependencies
+            git pull origin master
+            
+            # Install dependencies and build the project
             npm install
             npm run build
-            pm2 restart all
+
+            # Restart the application using PM2
+            pm2 start npm --name "finance-application" -- run start
             pm2 save
             pm2 ls
             pm2 logs
