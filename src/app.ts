@@ -20,8 +20,9 @@ export default class App {
   }
 
   private async initializeRoutes(): Promise<any> {
+    const date = new Date();
     this.app.get("/", async (req, res) => {
-      res.json({ message: "Welcome to Finance Application" });
+      res.json({ message: "Welcome to Finance Application " + date });
     });
     this.app.use("/api", routes);
 

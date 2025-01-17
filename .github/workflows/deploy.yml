@@ -25,5 +25,11 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             sudo apt-get -y update
-            cd /mnt/esdir
-            ls -al
+            cd /mnt/esdir/finance-application
+            git pull origin master
+            npm install
+            npm run build
+            pm2 restart all
+            pm2 save
+            pm2 ls
+            pm2 logs
