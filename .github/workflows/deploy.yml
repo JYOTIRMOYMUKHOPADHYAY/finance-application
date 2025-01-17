@@ -57,5 +57,4 @@ jobs:
             pm2 restart all || pm2 start npm --name "finance-application" -- run start
             pm2 save
             pm2 ls
-            pm2 logs
 
