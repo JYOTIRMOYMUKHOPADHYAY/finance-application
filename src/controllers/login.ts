@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 import { LoginService } from "../services/login.service";
 import { verifyPassword } from "../utils/utils";
 import { sendErrorResponse, sendSuccessResponse } from "../middleware/responseHandeler";
+import { TokenService } from "../services/token.service";
 
 
 
 
 const loginService = new LoginService();
+const tokenService = new TokenService();
 export class LoginController {
   constructor() {}
 
@@ -27,10 +29,13 @@ export class LoginController {
     delete userData[0].password;
     delete userData[0].password_salt;
     if(verify){
-      return sendSuccessResponse(res, "User login successfully", userData[0]);
+      const token = tokenService.generateToken(userData[0]);
+      return sendSuccessResponse(res, "User login successfully", {userData: userData[0], token: token});
     }
     return sendErrorResponse(res, "Invalid credentials", null, 401);
     } catch (error) {
+      console.log("=====login====")
+      console.log(error)
       return sendErrorResponse(res, "Invalid credentials", error, 401);
     }
   }

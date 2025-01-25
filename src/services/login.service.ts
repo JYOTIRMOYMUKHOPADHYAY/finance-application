@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import LoginRepository from "../repository/login";
 
+
 export class LoginService {
   private loginRepo = new LoginRepository();
-
   constructor() {}
   public async getUserTypes(): Promise<any> {
     try {
@@ -21,11 +21,6 @@ export class LoginService {
       throw error;
     }
   }
-
-
-  // public login(mobile: string, password: string): Promise<any> {
-  //   return this.loginRepo.login(mobile, password);
-  // }
 
   public login(mobile: string, password: string): Promise<any> {
     return this.loginRepo.login(mobile, password);
