@@ -26,7 +26,7 @@ export class ServicesController {
 
   public async getSubServices(req: Request, res: Response): Promise<any> {
     try {
-      const id = req.params.id;
+      const id = req.body.service_id;
       if (!id || isNaN(Number(id))) {
         return sendErrorResponse(res, "Invalid ID", null, 401);
       }

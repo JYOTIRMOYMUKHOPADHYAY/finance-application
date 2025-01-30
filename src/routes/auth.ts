@@ -12,6 +12,7 @@ import { ServicesController } from "../controllers/services";
 import { ApplyJobController } from "../controllers/applyJob";
 import { applyJobValidationSchema } from "../middleware/schema/applyJob";
 import multer from "multer";
+import { subServiceValidationSchema } from "../middleware/schema/subService";
 
 const auth_router = Router();
 const loginController = new LoginController();
@@ -42,7 +43,7 @@ auth_router.post(
 
 // others
 auth_router.get("/services", services.getAllServices);
-auth_router.get("/sub-services/:id", services.getSubServices);
+auth_router.post("/sub-services", subServiceValidationSchema, services.getSubServices);
 
 //Apply for this job
 auth_router.post(
