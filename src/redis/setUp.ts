@@ -76,6 +76,15 @@ class RedisService {
       return null;
     }
   }
+
+  public async removeValue(key: string): Promise<number | null> {
+    try {
+      return await this.client.del(key);
+    } catch (error) {
+      console.error("❌ Error retrieving key from Redis:", error);
+      return null;
+    }
+  }
 }
 
 // Export the singleton instance

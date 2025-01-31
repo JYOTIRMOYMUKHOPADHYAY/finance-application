@@ -54,6 +54,7 @@ export class OtpGenerator {
   ): Promise<any> {
     try {
       const data = await this.redis.getValue(userData.user_id.toString());
+      if(data) await this.redis.removeValue(userData.user_id.toString());
       return data === otp ? true : false;
     } catch (error) {
       console.log("========sendOtp=====");
