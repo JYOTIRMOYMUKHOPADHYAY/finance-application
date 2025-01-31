@@ -7,7 +7,7 @@ import { GetInTouchDataService } from "../services/getInTouch.service";
 
 const getInTouch = new GetInTouchDataService();
 export class GetInTouchController {
-  constructor() {} // private otpGenerator = new OtpGenerator()
+  constructor() {} 
 
   public async getInTouch(req: Request, res: Response): Promise<any> {
     try {

@@ -65,5 +65,20 @@ export default class LoginRepository {
     }
   }
 
+  public async updatePassword(mobile: string, password: string, salt: string): Promise<any> {
+    try {
+      return await sql`
+        UPDATE userData
+        SET password = ${password},
+            password_salt = ${salt},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE phone_no = ${mobile}
+        RETURNING *;
+      `;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
 
 }

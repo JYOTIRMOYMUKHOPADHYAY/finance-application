@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
+import dotenv from "dotenv";
 
+dotenv.config();
 export interface ApiResponse {
   success: boolean;
   message: string;

@@ -24,4 +24,8 @@ export class LoginService {
   public login(mobile: string, password: string): Promise<any> {
     return this.loginRepo.login(mobile, password);
   }
+
+  public updatePassword(mobile: string, password: string, salt: string): Promise<any> {
+    return this.loginRepo.updatePassword(mobile, password, salt);
+  }
 }

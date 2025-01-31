@@ -2,17 +2,25 @@ import express, { Application } from "express";
 import routes from "./routes/routes";
 import "./config/environment";
 import { globalErrorHandler } from "./middleware/responseHandeler";
-
+import RedisService from "./redis/setUp";
 export default class App {
   public app: Application;
   private port: number;
-
+  private redisService = RedisService;
   constructor(port: number) {
     this.app = express();
     this.port = port;
     this.initializeMiddlewares();
     this.initializeRoutes();
     this.checkDatabaseConnection();
+    this.redisService.connect();
+
+    // Handle graceful shutdown
+    process.on("SIGINT", async () => {
+      await this.redisService.disconnect();
+      process.exit(0);
+    });
+
   }
 
   private initializeMiddlewares(): void {
