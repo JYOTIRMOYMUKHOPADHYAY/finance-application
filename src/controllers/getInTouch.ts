@@ -12,7 +12,7 @@ export class GetInTouchController {
   public async getInTouch(req: Request, res: Response): Promise<any> {
     try {
       await getInTouch.getInTouch(req.body);
-      return sendSuccessResponse(res, "Applied Success!");
+      return sendSuccessResponse(res, "Form Submitted Success!");
     } catch (error) {
       console.log("=====getInTouch====");
       console.log(error);
