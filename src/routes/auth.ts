@@ -13,6 +13,8 @@ import { ApplyJobController } from "../controllers/applyJob";
 import { applyJobValidationSchema } from "../middleware/schema/applyJob";
 import multer from "multer";
 import { subServiceValidationSchema } from "../middleware/schema/subService";
+import { getInTouchValidationSchema } from "../middleware/schema/get-in-touch";
+import { GetInTouchController } from "../controllers/getInTouch";
 
 const auth_router = Router();
 const loginController = new LoginController();
@@ -20,7 +22,9 @@ const registerController = new RegisterController();
 const forgotPassword = new ForgotPasswordController();
 const services = new ServicesController();
 const applyJobController = new ApplyJobController();
-const upload = multer({ storage: multer.memoryStorage() });
+const getInTouchController = new GetInTouchController();
+const upload = multer({ storage: multer.memoryStorage()});
+
 auth_router.get("/user-types", loginController.getUserTypes);
 auth_router.post(
   "/register",
@@ -53,5 +57,12 @@ auth_router.post(
   validator,
   applyJobController.applyForJob
 );
+
+auth_router.post(
+    "/get-in-touch",
+    getInTouchValidationSchema,
+    validator,
+    getInTouchController.getInTouch
+  );
 
 export default auth_router;

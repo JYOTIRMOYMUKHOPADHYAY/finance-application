@@ -1,4 +1,9 @@
+-- Insert userTypes
+INSERT INTO public.usertypes(
+	usertype_id, usertype_name, created_by, updated_by)
+	VALUES (1, 'Customer', 1, 1), (2, 'Staff', 1, 1), (3, 'Admin', 1, 1);
 
+-- Insert services
 INSERT INTO services (name, role_name) VALUES
 ('Business Registration and Incorporation Services', 'business_registration_and_incorporation_services'),
 ('Finance & Accounting Outsourcing Services', 'finance_and_accounting_outsourcing_services'),
@@ -34,8 +39,8 @@ INSERT INTO subservices (name, service_id, role_name) VALUES
 -- Insert subservices for "Income Tax"
 INSERT INTO subservices (name, service_id, role_name) VALUES
 ('PAN Registration and Amendment', 3, 'pan_registration_and_amendment'),
-('ITR Filing – Individual', 3, 'itr_filing_individual'),
-('ITR Filing – Non Individual', 3, 'itr_filing_non_individual'),
+('ITR Filing Individual', 3, 'itr_filing_individual'),
+('ITR Filing Non Individual', 3, 'itr_filing_non_individual'),
 ('Business Tax Filing-Tax Audit Filing', 3, 'business_tax_filing_tax_audit_filing'),
 ('Preparation of Assessment Documentation', 3, 'preparation_of_assessment_documentation'),
 ('Income Tax Notice Handling', 3, 'income_tax_notice_handling');
