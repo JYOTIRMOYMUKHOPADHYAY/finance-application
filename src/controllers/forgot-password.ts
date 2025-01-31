@@ -67,9 +67,9 @@ export class ForgotPasswordController {
       
       const { salt, hash } = hashPassword(new_password);
       const data = await loginService.updatePassword(phone_no, hash, salt);
-      delete data.password;
-      delete data.password_salt;
-      return sendSuccessResponse(res, "Password reset successfully", { data });
+      delete data[0].password;
+      delete data[0].password_salt;
+      return sendSuccessResponse(res, "Password reset successfully", data[0]);
     } catch (error: any) {
       console.log("=====setForgotPassword====");
       console.log(error);
