@@ -30,7 +30,8 @@ export class LoginController {
     delete userData[0].password_salt;
     if(verify){
       const token = tokenService.generateToken(userData[0]);
-      return sendSuccessResponse(res, "User login successfully", {userData: userData[0], token: token});
+      userData[0].token = token
+      return sendSuccessResponse(res, "User login successfully", userData[0]);
     }
     return sendErrorResponse(res, "Invalid credentials", null, 401);
     } catch (error) {
