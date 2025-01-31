@@ -23,7 +23,7 @@ export class RegisterController {
       const userData = await registerService.register({
         name,
         email: email ? email : "",
-        phone_no,
+        phone_no: `+91${phone_no}`,
         userType_id: userType_id ? userType_id : 1,
         salt,
         hash,
