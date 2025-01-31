@@ -57,7 +57,7 @@ export class OtpGenerator {
       if(data) await this.redis.removeValue(userData.user_id.toString());
       return data === otp ? true : false;
     } catch (error) {
-      console.log("========sendOtp=====");
+      console.log("========verifyOtp=====");
       console.log(error);
       throw error;
     }
