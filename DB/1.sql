@@ -1,9 +1,22 @@
+-- Create the user_id_seq
+CREATE SEQUENCE user_id_seq
+START WITH 10000
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+
+
 -- Create the services table
 CREATE TABLE services (
     id SERIAL PRIMARY KEY,       -- Auto-incrementing primary key
     name VARCHAR(555) NOT NULL,  -- Name of the service
     role_name VARCHAR(555) NOT NULL -- Role name for the service
 );
+
+-- Alter the userdata table to use the user_id_seq
+ALTER TABLE userdata ALTER COLUMN user_id SET DEFAULT nextval('user_id_seq');
+
 
 -- Create the subservices table
 CREATE TABLE subservices (

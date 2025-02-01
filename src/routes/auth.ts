@@ -1,5 +1,4 @@
 import { Router } from "express";
-// import LoginController from "../controllers/login";
 import { validator } from "../middleware/schemaValidator";
 import { loginValidationSchema } from "../middleware/schema/login";
 import { LoginController } from "../controllers/login";
@@ -10,14 +9,11 @@ import { ForgotPasswordController } from "../controllers/forgot-password";
 import { ServicesController } from "../controllers/services";
 import { ApplyJobController } from "../controllers/applyJob";
 import { applyJobValidationSchema } from "../middleware/schema/applyJob";
-import multer, { StorageEngine } from "multer";
 import { subServiceValidationSchema } from "../middleware/schema/subService";
 import { getInTouchValidationSchema } from "../middleware/schema/get-in-touch";
 import { GetInTouchController } from "../controllers/getInTouch";
 import { upload } from "../middleware/fileValidationCheck";
 import { setForgotPasswordValidationSchema } from "../middleware/schema/set_forgot-password";
-
-
 
 const auth_router = Router();
 const loginController = new LoginController();
@@ -66,7 +62,11 @@ auth_router.post(
 auth_router.get("/services", services.getAllServices);
 
 // Sub Services
-auth_router.post("/sub-services", subServiceValidationSchema, services.getSubServices);
+auth_router.post(
+  "/sub-services",
+  subServiceValidationSchema,
+  services.getSubServices
+);
 
 //Apply for this job
 auth_router.post(
@@ -79,10 +79,10 @@ auth_router.post(
 
 // get in touch
 auth_router.post(
-    "/get-in-touch",
-    getInTouchValidationSchema,
-    validator,
-    getInTouchController.getInTouch
-  );
+  "/get-in-touch",
+  getInTouchValidationSchema,
+  validator,
+  getInTouchController.getInTouch
+);
 
 export default auth_router;

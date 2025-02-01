@@ -20,7 +20,6 @@ export default class App {
       await this.redisService.disconnect();
       process.exit(0);
     });
-
   }
 
   private initializeMiddlewares(): void {

@@ -12,11 +12,11 @@ class RedisService {
       host: String(process.env.REDIS_HOST),
       port: Number(process.env.REDIS_PORT),
       password: process.env.REDIS_PASSWORD || undefined,
-      lazyConnect: true, // Prevents auto-connect
+      lazyConnect: true,
     });
 
-    this.client.on("connect", () => console.log("✅ Connected to Redis"));
-    this.client.on("error", (err) => console.error("❌ Redis error:", err));
+    this.client.on("connect", () => console.log("✅ ✅ Connected to Redis"));
+    this.client.on("error", (err) => console.error("❌ ❌ Redis error:", err));
   }
 
   // Singleton pattern: Ensure only one instance exists
@@ -31,7 +31,7 @@ class RedisService {
   public async connect(): Promise<void> {
     try {
       await this.client.connect();
-      console.log("🚀 Redis connection established");
+      console.log("🚀 🚀 Redis connection established");
     } catch (error) {
       console.error("❌ Redis connection error:", error);
     }
@@ -41,7 +41,7 @@ class RedisService {
   public async disconnect(): Promise<void> {
     try {
       await this.client.quit();
-      console.log("🚀 Redis disconnected gracefully");
+      console.log("🚀 Redis disconnected gracefully.");
     } catch (error) {
       console.error("❌ Redis disconnection error:", error);
     }

@@ -9,7 +9,7 @@ const hashPassword = (password: string) => {
   return { salt, hash };
 };
 
-// // Function to verify a password
+// Function to verify a password
 const verifyPassword = (password: string, hash: string, salt: string) => {
   const hashToVerify = crypto
     .pbkdf2Sync(password, salt, 1000, 64, "sha512")
