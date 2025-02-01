@@ -1,5 +1,4 @@
 import otpGenerator from "otp-generator";
-import twilio from "twilio";
 import dotenv from "dotenv";
 import RedisService from "../redis/setUp";
 import { AWSService } from "./AWS.service";
