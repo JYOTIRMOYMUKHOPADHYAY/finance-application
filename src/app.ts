@@ -27,22 +27,12 @@ export default class App {
     this.app.use(
       cors({
         origin: "*", // Allows requests from any origin
-        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allowed HTTP methods
-        allowedHeaders: [
-          "Content-Type",
-          "Authorization",
-          "X-Requested-With",
-          "Accept",
-          "Origin",
-        ], // Allowed headers
-        exposedHeaders: [
-          "Content-Length",
-          "X-Response-Time",
-          "Authorization"
-        ], // Headers that can be exposed to clients
+        methods: "*", // Allows all HTTP methods
+        allowedHeaders: "*", // Allows all headers
+        exposedHeaders: "*", // Exposes all headers
         credentials: true, // Allows cookies and authorization headers
       })
-    );
+    );    
     this.app.use(express.json());
   }
 
