@@ -3,6 +3,7 @@ import routes from "./routes/routes";
 import "./config/environment";
 import { globalErrorHandler } from "./middleware/responseHandeler";
 import RedisService from "./redis/setUp";
+import cors from "cors";
 export default class App {
   public app: Application;
   private port: number;
@@ -23,6 +24,25 @@ export default class App {
   }
 
   private initializeMiddlewares(): void {
+    this.app.use(
+      cors({
+        origin: "*", // Allows requests from any origin
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allowed HTTP methods
+        allowedHeaders: [
+          "Content-Type",
+          "Authorization",
+          "X-Requested-With",
+          "Accept",
+          "Origin",
+        ], // Allowed headers
+        exposedHeaders: [
+          "Content-Length",
+          "X-Response-Time",
+          "Authorization"
+        ], // Headers that can be exposed to clients
+        credentials: true, // Allows cookies and authorization headers
+      })
+    );
     this.app.use(express.json());
   }
 
