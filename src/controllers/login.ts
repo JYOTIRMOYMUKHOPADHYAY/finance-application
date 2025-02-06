@@ -23,7 +23,6 @@ export class LoginController {
   
   public async login(req: Request, res: Response): Promise<any> {
     try {
-      console.log(req.body)
       const { phone_no, password } = req.body;
     const userData: any[] = await loginService.getUser(phone_no);
     const verify = verifyPassword(password, userData[0].password, userData[0].password_salt)
