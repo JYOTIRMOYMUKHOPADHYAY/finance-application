@@ -37,8 +37,8 @@ auth_router.post(
 // Login
 auth_router.post(
   "/login",
-  // loginValidationSchema,
-  // validator,
+  loginValidationSchema,
+  validator,
   loginController.login
 );
 
