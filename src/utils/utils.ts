@@ -17,4 +17,8 @@ const verifyPassword = (password: string, hash: string, salt: string) => {
   return hash === hashToVerify;
 };
 
-export { hashPassword, verifyPassword };
+const sanitizeFileName = (fileName: string) => {
+  return fileName.replace(/\s+/g, '_');
+} 
+
+export { hashPassword, verifyPassword, sanitizeFileName };

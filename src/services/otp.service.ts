@@ -35,11 +35,6 @@ export class OtpGenerator {
     otp: string
   ): Promise<any> {
     try {
-      // const response = await this.twilioClient.messages.create({
-      //   body: message,
-      //   from: this.twiloPhoneNo, // Replace with your Twilio number
-      //   to: userData.phone_no.toString(),
-      // });
       const response = await this.awsService.sendOTPusingSNS(
         userData.phone_no.toString(),
         otp

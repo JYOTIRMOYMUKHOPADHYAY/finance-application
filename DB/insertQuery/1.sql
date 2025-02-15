@@ -91,4 +91,3 @@ INSERT INTO subservices (name, service_id, role_name) VALUES
 ('Certification Services', 8, 'certification_services'),
 ('Preparing Project Reports', 8, 'preparing_project_reports'),
 ('Assistance in Obtaining Export Benefits', 8, 'assistance_in_obtaining_export_benefits');
-

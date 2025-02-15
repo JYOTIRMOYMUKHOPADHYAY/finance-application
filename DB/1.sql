@@ -78,5 +78,59 @@ CREATE TABLE  getInTouch(
     required_service INT NOT NULL,
 	message Varchar(255) NULL, -- Nullable status field,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (required_service) REFERENCES services(id) ON DELETE CASCADE
+    FOREIGN KEY (required_service) REFERENCES subservices(id) ON DELETE CASCADE
+);
+
+
+-- Business Registration and Incorporation Services
+-- Insert sole proprietorship
+-- Step 1: Create ENUM type for status
+CREATE TYPE status_enum AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
+
+-- Step 2: Create table using the ENUM type
+CREATE TABLE BRIS_sole_proprietorship (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,   
+    sub_service_id INT NOT NULL, 
+    aadhar_card VARCHAR(255) NOT NULL,
+    pan_card VARCHAR(255) NOT NULL,
+    id_card VARCHAR(255) NOT NULL,
+    bank_passbook_page VARCHAR(255) NOT NULL,
+    account_number VARCHAR(50) NOT NULL,
+    ifsc_code VARCHAR(20) NOT NULL,
+    bank_name VARCHAR(255) NOT NULL,
+    address_proof VARCHAR(255) NOT NULL,
+    rental_agreement VARCHAR(255),
+    noc VARCHAR(255),
+    bills VARCHAR(255),
+    trade_license VARCHAR(255),
+    gst_number VARCHAR(50) NOT NULL,
+    gst_certificate VARCHAR(255) NOT NULL,
+    status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES userdata(user_id)
+);
+
+-- Step 2: Create table using the ENUM type
+CREATE TABLE BRIS_parternership_form (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,   
+    sub_service_id INT NOT NULL, 
+    firm_name VARCHAR(255) NOT NULL,
+    business_type VARCHAR(255) NOT NULL,
+    data_of_establishment DATE NOT NULL,
+    place_of_business VARCHAR(255) NOT NULL,
+    partnership_form VARCHAR(555) NOT NULL,
+    partnership_deed VARCHAR(555) NOT NULL,
+    affidavit_confirming_copy VARCHAR(555) NOT NULL,
+    partner_pan_card VARCHAR(555) NOT NULL,
+    partner_address_proof VARCHAR(555) NOT NULL,
+    ownership_type VARCHAR(555) NOT NULL,
+    ownership_document VARCHAR(555) NOT NULL,
+    business_address_proof VARCHAR(555) NOT NULL,
+    status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES userdata(user_id)
 );

@@ -1,6 +1,11 @@
-import { S3, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3,
+  PutObjectCommand,
+  PutObjectCommandInput,
+} from "@aws-sdk/client-s3";
 import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
 import path from "path";
+import { sanitizeFileName } from "../utils/utils";
 export class AWSService {
   private s3: S3;
   private snsClient: SNSClient;
@@ -23,7 +28,7 @@ export class AWSService {
   }
 
   async uploadFileToS3(file: Express.Multer.File, pathToUpload: string) {
-    const fileName = path.parse(file.originalname).name;
+    const fileName = sanitizeFileName(path.parse(file.originalname).name);
     const timestampInSeconds =
       Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000);
     const fileExtension = path.extname(file.originalname);
@@ -43,6 +48,49 @@ export class AWSService {
       };
     } catch (error) {
       console.error("=====uploadFileToS3=======");
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async uploadMultipleFilesToS3(
+    files: Record<string, Express.Multer.File[]>,
+    pathToUpload: string,
+    customTag: string
+  ) {
+    if (!files || Object.keys(files).length === 0) {
+      throw new Error("No files provided for upload");
+    }
+
+    const uploadedFiles: Record<string, string> = {}; // To store S3 paths
+
+    const uploadPromises = Object.entries(files).flatMap(
+      ([fieldname, fileArray]) =>
+        fileArray.map(async (file) => {
+          const fileName = sanitizeFileName(path.parse(file.originalname).name);
+          const timestampInSeconds =
+            Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000);
+          const fileExtension = path.extname(file.originalname);
+          const key = `${pathToUpload}/${fieldname}/${fileName}_${timestampInSeconds}${fileExtension}`;
+
+          const params = {
+            Bucket: process.env.AWS_S3_BUCKET!,
+            Key: key,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+            Tagging: `customTag=${encodeURIComponent(customTag)}`, // Adding custom tag
+          };
+
+          await this.s3.send(new PutObjectCommand(params));
+          uploadedFiles[fieldname] = key; // Store the S3 path
+        })
+    );
+
+    try {
+      await Promise.all(uploadPromises);
+      return uploadedFiles; // Returns object with { fieldname: "S3 file path" }
+    } catch (error) {
+      console.error("===== uploadMultipleFilesToS3 ERROR =====");
       console.log(error);
       throw error;
     }
