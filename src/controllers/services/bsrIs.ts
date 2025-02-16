@@ -82,4 +82,42 @@ export class BusinessRergistrationIncorporationController {
       sendErrorResponse(res, "Invalid data", error, 401);
     }
   }
+
+  public async opcRegistration(req: Request, res: Response): Promise<void> {
+    if (
+      !(req.files! as any)?.directorPanCard ||
+      !(req.files! as any)?.identityProof ||
+      !(req.files! as any)?.addressProof ||
+      !(req.files! as any)?.registeredOfficeProof ||
+      !(req.files! as any)?.noc ||
+      !(req.files! as any)?.photograph ||
+      !(req.files! as any)?.moa ||
+      !(req.files! as any)?.aoa
+    ) {
+      sendErrorResponse(
+        res,
+        "Director Pan Card, Identity Proof, Address Proof, Registered Office Proof, NOC, Photograph, MOA, AOA are required",
+        null,
+        400
+      );
+      return;
+    }
+
+    try {
+      const userData = (req as any).user;
+      await BRISService.opcRegistration(
+        req.files! as Record<string, Express.Multer.File[]>,
+        userData,
+        req.body
+      );
+      return sendSuccessResponse(
+        res,
+        "Documents submitted successfully! Pls wait for approval."
+      );
+    } catch (error) {
+      console.log("====opcRegistration====");
+      console.log(error);
+      sendErrorResponse(res, "Invalid data", error, 401);
+    }
+  }
 }

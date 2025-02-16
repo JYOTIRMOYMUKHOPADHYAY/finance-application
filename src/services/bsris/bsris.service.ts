@@ -1,3 +1,4 @@
+import BRISopcRegistrationDetailsRepository from "../../repository/bsris/opc-registration";
 import BRISParternershipFormRepository from "../../repository/bsris/parternership-form";
 import BRISSoleProprietorshipRepository from "../../repository/bsris/sole-proprietorship";
 import { AWSService } from "../AWS.service";
@@ -6,7 +7,8 @@ export class BusinessRegistrationIncorporationService {
   constructor(
     private awsService = new AWSService(),
     private soleProprietorshipRepo = new BRISSoleProprietorshipRepository(),
-    private parternershipFormRepo = new BRISParternershipFormRepository()
+    private parternershipFormRepo = new BRISParternershipFormRepository(),
+    private opcRegistrationRepo = new BRISopcRegistrationDetailsRepository()
   ) {}
 
   public async soleProprietorship(
@@ -72,6 +74,35 @@ export class BusinessRegistrationIncorporationService {
       );
     } catch (error) {
       console.log("====Service Error: parternershipForm====");
+      console.log(error);
+      throw error;
+    }
+  }
+
+  public async opcRegistration(
+    files: Record<string, Express.Multer.File[]>,
+    userData: any,
+    fieldData: any
+  ): Promise<any> {
+    try {
+      const data = await this.uploadMultipleFilesToS3(files, userData);
+      const opcRegistrationDetails = {
+        userId: userData.user_id,
+        subServiceId: fieldData?.subServiceId,
+        addressProof: data?.addressProof,
+        identityProof: data?.identityProof,
+        noc: data?.noc,
+        registeredOfficeProof: data?.registeredOfficeProof,
+        photograph: data?.photograph,
+        aoa: data?.aoa,
+        moa: data?.moa,
+        directorPanCard: data?.directorPanCard,
+      };
+      return await this.opcRegistrationRepo.opcRegistration(
+        opcRegistrationDetails
+      );
+    } catch (error) {
+      console.log("====Service Error: opcRegistration====");
       console.log(error);
       throw error;
     }

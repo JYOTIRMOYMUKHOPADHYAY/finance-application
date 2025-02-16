@@ -87,7 +87,7 @@ CREATE TABLE  getInTouch(
 -- Step 1: Create ENUM type for status
 CREATE TYPE status_enum AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
 
--- Step 2: Create table using the ENUM type
+
 CREATE TABLE BRIS_sole_proprietorship (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,   
@@ -106,13 +106,13 @@ CREATE TABLE BRIS_sole_proprietorship (
     trade_license VARCHAR(255),
     gst_number VARCHAR(50) NOT NULL,
     gst_certificate VARCHAR(255) NOT NULL,
+    isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
     status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE
+    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES userdata(user_id)
 );
 
--- Step 2: Create table using the ENUM type
 CREATE TABLE BRIS_parternership_form (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,   
@@ -129,8 +129,28 @@ CREATE TABLE BRIS_parternership_form (
     ownership_type VARCHAR(555) NOT NULL,
     ownership_document VARCHAR(555) NOT NULL,
     business_address_proof VARCHAR(555) NOT NULL,
+    isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
     status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE
+    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES userdata(user_id)
+);
+
+CREATE TABLE BRIS_opc_registration (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,   
+    sub_service_id INT NOT NULL, 
+    address_proof VARCHAR(255) NOT NULL,
+    businidentity_proofess_type VARCHAR(255) NOT NULL,
+    noc VARCHAR(255) NOT NULL,
+    registered_office_proof VARCHAR(255) NOT NULL,
+    photograph VARCHAR(255) NOT NULL,
+    aoa VARCHAR(255) NOT NULL,
+    moa VARCHAR(255) NOT NULL,
+    director_pan_card VARCHAR(255) NOT NULL,
+    isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
+    status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES userdata(user_id)
 );
