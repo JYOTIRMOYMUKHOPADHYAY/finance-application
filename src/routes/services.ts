@@ -12,18 +12,9 @@ const businessRegistrationController =
 
 // sole-proprietorship
 services_router.post(
-  "/sole-proprietorship",
+  "/bric",
   upload.fields([
-    { name: "aadharCard", maxCount: 1 },
-    { name: "panCard", maxCount: 1 },
-    { name: "idCard", maxCount: 1 },
-    { name: "bankPassbookPage", maxCount: 1 },
-    { name: "addressProof", maxCount: 1 },
-    { name: "rentalAgreement", maxCount: 1 },
-    { name: "noc", maxCount: 1 },
-    { name: "bills", maxCount: 3 }, // Allows up to 3 bills
-    { name: "tradeLicense", maxCount: 1 },
-    { name: "gstCertificate", maxCount: 1 },
+    { name: "files", maxCount: 50 }
   ]),
   businessRegistrationValidationSchema,
   validator,

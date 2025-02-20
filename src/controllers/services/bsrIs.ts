@@ -11,18 +11,11 @@ export class BusinessRergistrationIncorporationController {
 
   public async soleProprietorship(req: Request, res: Response): Promise<void> {
     if (
-      !(req.files! as any)?.aadharCard ||
-      !(req.files! as any)?.panCard ||
-      !(req.files! as any)?.idCard ||
-      !(req.files! as any)?.bankPassbookPage ||
-      !(req.files! as any)?.addressProof ||
-      !(req.files! as any)?.rentalAgreement ||
-      !(req.files! as any)?.noc ||
-      !(req.files! as any)?.gstCertificate
+      !req.files
     ) {
       sendErrorResponse(
         res,
-        "Aadhaar card, PAN, ID card, Bank passbook page, Address proof, Rental agreement, NOC, GST certificate are required",
+        "Files are required",
         null,
         400
       );

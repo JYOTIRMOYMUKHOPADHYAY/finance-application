@@ -1,11 +1,10 @@
-import {
-  S3,
-  PutObjectCommand,
-  PutObjectCommandInput,
-} from "@aws-sdk/client-s3";
+import { S3, PutObjectCommand } from "@aws-sdk/client-s3";
 import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
 import path from "path";
 import { sanitizeFileName } from "../utils/utils";
+import archiver from "archiver";
+import * as stream from "stream";
+import { Upload } from "@aws-sdk/lib-storage";
 export class AWSService {
   private s3: S3;
   private snsClient: SNSClient;
@@ -62,39 +61,108 @@ export class AWSService {
       throw new Error("No files provided for upload");
     }
 
-    const uploadedFiles: Record<string, string> = {}; // To store S3 paths
+    // Create ZIP archive
+    const archive = archiver("zip", { zlib: { level: 9 } });
+    //   const chunks: Buffer[] = [];
+    //   // / Collect the ZIP data in a buffer
+    // archive.on('data', (chunk) => chunks.push(chunk));
+    const passThrough = new stream.PassThrough();
+    const timestampInSeconds = Math.floor(Date.now() / 1000);
+    const zipFileName = `files_${timestampInSeconds}.zip`;
 
-    const uploadPromises = Object.entries(files).flatMap(
-      ([fieldname, fileArray]) =>
-        fileArray.map(async (file) => {
-          const fileName = sanitizeFileName(path.parse(file.originalname).name);
-          const timestampInSeconds =
-            Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000);
-          const fileExtension = path.extname(file.originalname);
-          const key = `${pathToUpload}/${fieldname}/${fileName}_${timestampInSeconds}${fileExtension}`;
+    // Append each file to ZIP
+    for (const [fieldname, fileArray] of Object.entries(files)) {
+      for (const file of fileArray) {
+        const sanitizedFileName = sanitizeFileName(
+          path.parse(file.originalname).name
+        );
+        const fileExtension = path.extname(file.originalname);
+        const fullFileName = `${sanitizedFileName}-${timestampInSeconds}${fileExtension}`;
+        archive.append(file.buffer, { name: fullFileName });
+      }
+    }
 
-          const params = {
-            Bucket: process.env.AWS_S3_BUCKET!,
-            Key: key,
-            Body: file.buffer,
-            ContentType: file.mimetype,
-            Tagging: `customTag=${encodeURIComponent(customTag)}`, // Adding custom tag
-          };
+    // archive.finalize();
+    archive.pipe(passThrough);
+    // **Important**: Wait for archive finalization to ensure all files are included
+    const finalizePromise = new Promise((resolve, reject) => {
+      archive.on("error", reject);
+      archive.on("end", resolve);
+    });
 
-          await this.s3.send(new PutObjectCommand(params));
-          uploadedFiles[fieldname] = key; // Store the S3 path
-        })
-    );
-
+    archive.finalize(); // Start zipping process
+    await finalizePromise; // Wait for it to finish
+    // const zipBuffer = Buffer.concat(chunks);
+    // // **Check ZIP size and contents before upload**
+    // console.log(`Generated ZIP Size: ${zipBuffer.length} bytes`);
+    // console.log(`ZIP Contains:`, archive.pointer(), `files`);
+    // Upload ZIP to S3
+    const zipKey = `${pathToUpload}/${zipFileName}`;
     try {
-      await Promise.all(uploadPromises);
-      return uploadedFiles; // Returns object with { fieldname: "S3 file path" }
+      const parallelUploads3 = new Upload({
+        client: this.s3, // Your S3 client
+        params: {
+          Bucket: process.env.AWS_S3_BUCKET!,
+          Key: zipKey,
+          Body: passThrough, // Streamed upload
+          ContentType: "application/zip",
+          Tagging: `customTag=${encodeURIComponent(customTag)}`,
+        },
+      });
+      await parallelUploads3.done();
+
+      return { zipFile: zipKey };
     } catch (error) {
       console.error("===== uploadMultipleFilesToS3 ERROR =====");
       console.log(error);
       throw error;
     }
   }
+
+  // async uploadMultipleFilesToS3(
+  //   files: Record<string, Express.Multer.File[]>,
+  //   pathToUpload: string,
+  //   customTag: string
+  // ) {
+  //   if (!files || Object.keys(files).length === 0) {
+  //     throw new Error("No files provided for upload");
+  //   }
+  //   const archive = archiver('zip', { zlib: { level: 9 } });
+  //   const passThrough = new stream.PassThrough();
+
+  //   const uploadedFiles: Record<string, string> = {}; // To store S3 paths
+
+  //   const uploadPromises = Object.entries(files).flatMap(
+  //     ([fieldname, fileArray]) =>
+  //       fileArray.map(async (file) => {
+  //         const fileName = sanitizeFileName(path.parse(file.originalname).name);
+  //         const timestampInSeconds =
+  //           Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000);
+  //         const fileExtension = path.extname(file.originalname);
+  //         const key = `${pathToUpload}/${fieldname}/${fileName}_${timestampInSeconds}${fileExtension}`;
+
+  //         const params = {
+  //           Bucket: process.env.AWS_S3_BUCKET!,
+  //           Key: key,
+  //           Body: file.buffer,
+  //           ContentType: file.mimetype,
+  //           Tagging: `customTag=${encodeURIComponent(customTag)}`, // Adding custom tag
+  //         };
+
+  //         await this.s3.send(new PutObjectCommand(params));
+  //         uploadedFiles[fieldname] = key; // Store the S3 path
+  //       })
+  //   );
+
+  //   try {
+  //     await Promise.all(uploadPromises);
+  //     return uploadedFiles; // Returns object with { fieldname: "S3 file path" }
+  //   } catch (error) {
+  //     console.error("===== uploadMultipleFilesToS3 ERROR =====");
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
 
   async sendOTPusingSNS(phoneNumber: string, otp: string): Promise<any> {
     try {

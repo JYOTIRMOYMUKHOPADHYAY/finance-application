@@ -2,7 +2,7 @@ import BRISopcRegistrationDetailsRepository from "../../repository/bsris/opc-reg
 import BRISParternershipFormRepository from "../../repository/bsris/parternership-form";
 import BRISSoleProprietorshipRepository from "../../repository/bsris/sole-proprietorship";
 import { AWSService } from "../AWS.service";
-
+import archiver from 'archiver';
 export class BusinessRegistrationIncorporationService {
   constructor(
     private awsService = new AWSService(),
@@ -20,23 +20,14 @@ export class BusinessRegistrationIncorporationService {
       const uploadData = await this.uploadMultipleFilesToS3(files, userData);
       const registrationDetails = {
         userId: userData.user_id,
+        serviceId: fieldData?.serviceId,
         subServiceId: fieldData?.subServiceId,
-        aadharCard: uploadData?.aadharCard,
-        panCard: uploadData?.panCard,
-        idCard: uploadData?.idCard,
-        bankPassbookPage: uploadData?.bankPassbookPage,
-        accountNumber: fieldData?.accountNumber,
-        ifscCode: fieldData?.ifscCode,
-        bankName: fieldData?.bankName,
-        addressProof: uploadData?.addressProof,
-        rentalAgreement: uploadData?.rentalAgreement || null,
-        noc: uploadData?.noc || null,
-        bills: uploadData?.bills || null,
-        tradeLicense: uploadData?.tradeLicense || null,
-        gstNumber: fieldData?.gstNumber,
-        gstCertificate: uploadData?.gstCertificate,
+        mobileNo: fieldData?.mobileNo,
+        mailId: fieldData?.mailId,
+        periodId: fieldData?.periodId,
+        message: fieldData?.message,
+        fileLink: uploadData.zipFile,
       };
-
       return await this.soleProprietorshipRepo.soleProprietorship(
         registrationDetails
       );
@@ -108,11 +99,12 @@ export class BusinessRegistrationIncorporationService {
     }
   }
 
+
   private async uploadMultipleFilesToS3(
     files: Record<string, Express.Multer.File[]>,
     userData: any
   ): Promise<any> {
-    try {
+    try {    
       return await this.awsService.uploadMultipleFilesToS3(
         files! as Record<string, Express.Multer.File[]>,
         `${process.env.AWS_SERVICES_UPLOAD_PATH!}/${process.env

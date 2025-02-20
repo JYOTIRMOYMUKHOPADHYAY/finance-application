@@ -6,7 +6,6 @@ NO MINVALUE
 NO MAXVALUE
 CACHE 1;
 
-
 -- Create the services table
 CREATE TABLE genericMaster (
     id SERIAL PRIMARY KEY,       -- Auto-incrementing primary key
@@ -119,47 +118,48 @@ CREATE TABLE BRIS_sole_proprietorship (
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
     FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES userdata(user_id)
+    FOREIGN KEY (user_id) REFERENCES userdata(user_id),
+    FOREIGN KEY (periodId) REFERENCES genericMasterDropdown(id)
 );
 
-CREATE TABLE BRIS_parternership_form (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,   
-    sub_service_id INT NOT NULL, 
-    firm_name VARCHAR(255) NOT NULL,
-    business_type VARCHAR(255) NOT NULL,
-    data_of_establishment DATE NOT NULL,
-    place_of_business VARCHAR(255) NOT NULL,
-    partnership_form VARCHAR(555) NOT NULL,
-    partnership_deed VARCHAR(555) NOT NULL,
-    affidavit_confirming_copy VARCHAR(555) NOT NULL,
-    partner_pan_card VARCHAR(555) NOT NULL,
-    partner_address_proof VARCHAR(555) NOT NULL,
-    ownership_type VARCHAR(555) NOT NULL,
-    ownership_document VARCHAR(555) NOT NULL,
-    business_address_proof VARCHAR(555) NOT NULL,
-    isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
-    status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
-    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES userdata(user_id)
-);
+-- CREATE TABLE BRIS_parternership_form (
+--     id SERIAL PRIMARY KEY,
+--     user_id INT NOT NULL,   
+--     sub_service_id INT NOT NULL, 
+--     firm_name VARCHAR(255) NOT NULL,
+--     business_type VARCHAR(255) NOT NULL,
+--     data_of_establishment DATE NOT NULL,
+--     place_of_business VARCHAR(255) NOT NULL,
+--     partnership_form VARCHAR(555) NOT NULL,
+--     partnership_deed VARCHAR(555) NOT NULL,
+--     affidavit_confirming_copy VARCHAR(555) NOT NULL,
+--     partner_pan_card VARCHAR(555) NOT NULL,
+--     partner_address_proof VARCHAR(555) NOT NULL,
+--     ownership_type VARCHAR(555) NOT NULL,
+--     ownership_document VARCHAR(555) NOT NULL,
+--     business_address_proof VARCHAR(555) NOT NULL,
+--     isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
+--     status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
+--     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
+--     FOREIGN KEY (user_id) REFERENCES userdata(user_id)
+-- );
 
-CREATE TABLE BRIS_opc_registration (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,   
-    sub_service_id INT NOT NULL, 
-    address_proof VARCHAR(255) NOT NULL,
-    businidentity_proofess_type VARCHAR(255) NOT NULL,
-    noc VARCHAR(255) NOT NULL,
-    registered_office_proof VARCHAR(255) NOT NULL,
-    photograph VARCHAR(255) NOT NULL,
-    aoa VARCHAR(255) NOT NULL,
-    moa VARCHAR(255) NOT NULL,
-    director_pan_card VARCHAR(255) NOT NULL,
-    isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
-    status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
-    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES userdata(user_id)
-);
+-- CREATE TABLE BRIS_opc_registration (
+--     id SERIAL PRIMARY KEY,
+--     user_id INT NOT NULL,   
+--     sub_service_id INT NOT NULL, 
+--     address_proof VARCHAR(255) NOT NULL,
+--     businidentity_proofess_type VARCHAR(255) NOT NULL,
+--     noc VARCHAR(255) NOT NULL,
+--     registered_office_proof VARCHAR(255) NOT NULL,
+--     photograph VARCHAR(255) NOT NULL,
+--     aoa VARCHAR(255) NOT NULL,
+--     moa VARCHAR(255) NOT NULL,
+--     director_pan_card VARCHAR(255) NOT NULL,
+--     isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
+--     status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
+--     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
+--     FOREIGN KEY (user_id) REFERENCES userdata(user_id)
+-- );

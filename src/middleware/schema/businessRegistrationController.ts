@@ -1,8 +1,10 @@
 import { body } from "express-validator";
 
 export const businessRegistrationValidationSchema = [
-  body("accountNumber", "Account number must not be empty").notEmpty(),
-  body("ifscCode", "IFSC code must not be empty").notEmpty(),
-  body("bankName", "Bank name must not be empty").notEmpty(),
-  body("subServiceId", "subServiceId must not be empty").notEmpty(),
+  body("serviceId", "Service ID must not be empty").notEmpty(),
+  body("subServiceId", "Sub Service ID must not be empty").notEmpty(),
+  body("mobileNo", "Mobile No must not be empty").notEmpty(),
+  body("mailId", "Mail ID must not be empty").notEmpty(),
+  body("periodId", "Period must not be empty").notEmpty(),
+  body("message", "Mesage must not be empty").notEmpty()
 ];
