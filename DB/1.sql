@@ -8,6 +8,22 @@ CACHE 1;
 
 
 -- Create the services table
+CREATE TABLE genericMaster (
+    id SERIAL PRIMARY KEY,       -- Auto-incrementing primary key
+    name VARCHAR(555) NOT NULL,  -- Name of the service
+   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE genericMasterDropdown (
+    id SERIAL PRIMARY KEY,      -- Auto-incrementing primary key
+    master_id INT NOT NULL,  
+    name VARCHAR(555) NOT NULL,  -- Name of the service
+   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   FOREIGN KEY (master_id) REFERENCES genericMaster(id)
+);
+
+
+-- Create the services table
 CREATE TABLE services (
     id SERIAL PRIMARY KEY,       -- Auto-incrementing primary key
     name VARCHAR(555) NOT NULL,  -- Name of the service
@@ -91,24 +107,17 @@ CREATE TYPE status_enum AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
 CREATE TABLE BRIS_sole_proprietorship (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,   
+    service_id INT NOT NULL, 
     sub_service_id INT NOT NULL, 
-    aadhar_card VARCHAR(255) NOT NULL,
-    pan_card VARCHAR(255) NOT NULL,
-    id_card VARCHAR(255) NOT NULL,
-    bank_passbook_page VARCHAR(255) NOT NULL,
-    account_number VARCHAR(50) NOT NULL,
-    ifsc_code VARCHAR(20) NOT NULL,
-    bank_name VARCHAR(255) NOT NULL,
-    address_proof VARCHAR(255) NOT NULL,
-    rental_agreement VARCHAR(255),
-    noc VARCHAR(255),
-    bills VARCHAR(255),
-    trade_license VARCHAR(255),
-    gst_number VARCHAR(50) NOT NULL,
-    gst_certificate VARCHAR(255) NOT NULL,
+    mobileNo VARCHAR(15) NOT NULL,
+    mailId VARCHAR(255) NOT NULL,
+    periodId VARCHAR(255) NOT NULL,
+    message VARCHAR(555) NOT NULL,
+    fileLink VARCHAR(555) NOT NULL,
     isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
     status status_enum NOT NULL DEFAULT 'PENDING', -- Use ENUM type
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
     FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES userdata(user_id)
 );

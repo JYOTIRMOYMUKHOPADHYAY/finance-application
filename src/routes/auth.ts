@@ -14,6 +14,7 @@ import { getInTouchValidationSchema } from "../middleware/schema/get-in-touch";
 import { GetInTouchController } from "../controllers/getInTouch";
 import { upload } from "../middleware/fileValidationCheck";
 import { setForgotPasswordValidationSchema } from "../middleware/schema/set_forgot-password";
+import { GenericMasterController } from "../controllers/genericMaster";
 
 const auth_router = Router();
 const loginController = new LoginController();
@@ -22,6 +23,7 @@ const forgotPassword = new ForgotPasswordController();
 const services = new ServicesController();
 const applyJobController = new ApplyJobController();
 const getInTouchController = new GetInTouchController();
+const genericMasterController = new GenericMasterController();
 
 // User Types
 auth_router.get("/user-types", loginController.getUserTypes);
@@ -83,6 +85,12 @@ auth_router.post(
   getInTouchValidationSchema,
   validator,
   getInTouchController.getInTouch
+);
+
+// Generic dropdown
+auth_router.get(
+  "/generic-dropdown",
+  genericMasterController.getDropdownData
 );
 
 export default auth_router;
