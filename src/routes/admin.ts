@@ -1,12 +1,18 @@
 import { Router } from "express";
 import { validator } from "../middleware/schemaValidator";
-import { CreateStaffController } from "../controllers/admin/staff-user";
-import { createUserValidationSchema, updateUserValidationSchema } from "../middleware/schema/staff-user";
+import { CreateStaffController } from "../controllers/admin/user";
+import {
+  createUserValidationSchema,
+  updateUserValidationSchema,
+} from "../middleware/schema/staff-user";
 
 const admin_route = Router();
-const createStaffControllerData =
-  new CreateStaffController();
+const createStaffControllerData = new CreateStaffController();
 
+// admin_route.get("/dashboard", createStaffControllerData.adminDashBoard);
+
+admin_route.get("/new-service-requests", createStaffControllerData.getServicesSubmission);
+admin_route.get("/all-service-requests", createStaffControllerData.getAllServicesSubmission);
 
 admin_route.post(
   "/create-staff",
@@ -21,5 +27,16 @@ admin_route.post(
   validator,
   createStaffControllerData.updateStaff
 );
+
+admin_route.get("/get-all-staff", createStaffControllerData.getAllStaff);
+
+admin_route.get("/get-all-customer", createStaffControllerData.getAllCustomer);
+
+// admin_route.post(
+//   "/map-customer-staff",
+//   updateUserValidationSchema,
+//   validator,
+//   createStaffControllerData.updateStaff
+// );
 
 export default admin_route;

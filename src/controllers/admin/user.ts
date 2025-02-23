@@ -7,7 +7,7 @@ import { RegisterService } from "../../services/register.service";
 import { LoginService } from "../../services/login.service";
 import { hashPassword } from "../../utils/utils";
 import { USERTYPE_ID } from "../../globalVariable";
-import { StaffUserService } from "../../services/admin/staff-user";
+import { StaffUserService } from "../../services/admin/user";
 
 const registerService = new RegisterService();
 const loginService = new LoginService();
@@ -15,6 +15,34 @@ const staffService = new StaffUserService();
 export class CreateStaffController {
   constructor() // private staffService = new StaffUserService()
   {}
+
+  public async getServicesSubmission(req: Request, res: Response): Promise<void> {
+    try {
+      const staffData = await staffService.getServicesSubmission();
+      return sendSuccessResponse(
+        res,
+        "Success",
+        staffData,
+        200
+      );
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 400);
+    }
+  }
+
+  public async getAllServicesSubmission(req: Request, res: Response): Promise<void> {
+    try {
+      const staffData = await staffService.getServicesSubmission(true);
+      return sendSuccessResponse(
+        res,
+        "Success",
+        staffData,
+        200
+      );
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 400);
+    }
+  }
 
   public async createStaff(req: Request, res: Response): Promise<void> {
     const adminUser = (req as any).user;
@@ -53,11 +81,38 @@ export class CreateStaffController {
       const staffData = await staffService.updateStaff(staffUser, adminUser);
       delete staffData[0].password;
       delete staffData[0].password_salt;
-      console.log(staffData);
       return sendSuccessResponse(
         res,
         "User register successfully",
         staffData[0],
+        200
+      );
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 400);
+    }
+  }
+
+  public async getAllStaff(req: Request, res: Response): Promise<void> {
+    try {
+      const staffData = await staffService.getUser(USERTYPE_ID.STAFF);
+      return sendSuccessResponse(
+        res,
+        "Success",
+        staffData,
+        200
+      );
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 400);
+    }
+  }
+
+  public async getAllCustomer(req: Request, res: Response): Promise<void> {
+    try {
+      const staffData = await staffService.getUser(USERTYPE_ID.CUSTOMER);
+      return sendSuccessResponse(
+        res,
+        "Success",
+        staffData,
         200
       );
     } catch (error: any) {
