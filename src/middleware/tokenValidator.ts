@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { TokenService } from "../services/token.service";
-import { sendErrorResponse } from "./responseHandeler";
+import { sendErrorResponse, sendSuccessResponse } from "./responseHandeler";
+import { USERTYPE_ID } from "../globalVariable";
 
 const tokenService = new TokenService();
 export const validateJWT = (
@@ -22,28 +23,46 @@ export const validateJWT = (
     console.error("JWT Error:", error.message);
 
     if (error.name === "TokenExpiredError") {
-      sendErrorResponse(
+      return sendErrorResponse(
         res,
         "Token expired. Please log in again.",
         error,
         401
-      )
+      );
     }
     if (error.name === "JsonWebTokenError") {
-    //   res.status(403).json({ message: "Invalid token. Access denied." });
-      sendErrorResponse(
+      //   res.status(403).json({ message: "Invalid token. Access denied." });
+      return sendErrorResponse(
         res,
         "Invalid token. Access denied.",
         error,
         403
-      )
+      );
     }
     // res.status(403).json({ message: "Authentication failed." });
-    sendErrorResponse(
+    return sendErrorResponse(res, "Authentication failed.", error, 403);
+  }
+};
+
+export const validateAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  try {
+    if ((req as any).user?.usertype_id == USERTYPE_ID.ADMIN) {
+      next();
+    } else {
+      sendSuccessResponse(res, "Access Denied. Not an Admin.", null, 403);
+    }
+  } catch (error: any) {
+    console.error("JWT Error:", error.message);
+    // res.status(403).json({ message: "Authentication failed." });
+    return sendErrorResponse(
       res,
-      "Authentication failed.",
+      "Unauthorized. Authentication failed.",
       error,
       403
-    )
+    );
   }
 };

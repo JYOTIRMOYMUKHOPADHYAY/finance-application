@@ -67,6 +67,9 @@ CREATE TABLE userData (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (userType_id) REFERENCES userTypes(userType_id)
 );
+ALTER TABLE "userData"
+ADD COLUMN "isDeleted" BOOLEAN DEFAULT FALSE,
+ADD COLUMN "isActive" BOOLEAN DEFAULT TRUE;
 
 -- Create the applyToJob table
 CREATE TABLE  applyToJob(

@@ -1,0 +1,25 @@
+import { Router } from "express";
+import { validator } from "../middleware/schemaValidator";
+import { CreateStaffController } from "../controllers/admin/staff-user";
+import { createUserValidationSchema, updateUserValidationSchema } from "../middleware/schema/staff-user";
+
+const admin_route = Router();
+const createStaffControllerData =
+  new CreateStaffController();
+
+
+admin_route.post(
+  "/create-staff",
+  createUserValidationSchema,
+  validator,
+  createStaffControllerData.createStaff
+);
+
+admin_route.post(
+  "/edit-staff",
+  updateUserValidationSchema,
+  validator,
+  createStaffControllerData.updateStaff
+);
+
+export default admin_route;

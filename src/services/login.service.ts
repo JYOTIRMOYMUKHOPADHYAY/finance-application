@@ -21,6 +21,15 @@ export class LoginService {
     }
   }
 
+  public async getUserById(id: number): Promise<any | null> {
+    try {
+      const user = await this.loginRepo.getUserById(id);
+      return user && user.length > 0 ? user : null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public login(mobile: string, password: string): Promise<any> {
     return this.loginRepo.login(mobile, password);
   }

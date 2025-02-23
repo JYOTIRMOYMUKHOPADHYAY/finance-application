@@ -65,6 +65,18 @@ export default class LoginRepository {
     }
   }
 
+  public async getUserById(id: number): Promise<any> {
+    try {
+      return await sql`
+      SELECT * 
+      FROM userData 
+      WHERE user_id = ${id}
+    `;
+    } catch (error) {
+     throw error
+    }
+  }
+
   public async updatePassword(mobile: string, password: string, salt: string): Promise<any> {
     try {
       return await sql`
