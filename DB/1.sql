@@ -103,7 +103,7 @@ CREATE TABLE  getInTouch(
 -- Business Registration and Incorporation Services
 -- Insert sole proprietorship
 -- Step 1: Create ENUM type for status
-CREATE TYPE status_enum AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
+CREATE TYPE status_enum AS ENUM ('APPROVED', 'REJECTED', 'PENDING' , 'COMPLETED');
 
 
 CREATE TABLE BRIS_sole_proprietorship (

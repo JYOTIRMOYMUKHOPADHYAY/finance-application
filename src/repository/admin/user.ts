@@ -50,8 +50,29 @@ export default class UserRepository {
   ): Promise<any> {
     try {
       return await sql`
-SELECT 
-          bsp.*,
+SELECT
+bsp.*,
+          s.name AS service_name,
+          s.id AS service_id,
+          ss.name AS sub_service_name,
+          ss.id AS sub_service_id
+      FROM bris_sole_proprietorship bsp
+      JOIN services s ON s.id = bsp.service_id
+      JOIN subservices ss ON ss.id = bsp.sub_service_id;
+`;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  public async getNewServicesSubmission(
+    status: string = STATUS.PENDING
+  ): Promise<any> {
+    try {
+      return await sql`
+SELECT
+bsp.*,
           s.name AS service_name,
           s.id AS service_id,
           ss.name AS sub_service_name,
@@ -59,7 +80,30 @@ SELECT
       FROM bris_sole_proprietorship bsp
       JOIN services s ON s.id = bsp.service_id
       JOIN subservices ss ON ss.id = bsp.sub_service_id
-      WHERE bsp.status IN (${status});
+      WHERE bsp.status = ${status} 
+      ORDER BY bsp.created_date DESC;
+`;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  public async approveRejectServicesSubmission(
+    isApproved: boolean,
+    requestId: number
+  ): Promise<any> {
+    try {
+      console.log(isApproved);
+      return await sql`
+UPDATE bris_sole_proprietorship
+SET status = CASE 
+    WHEN ${isApproved} THEN ${STATUS.APPROVED}::status_enum 
+    ELSE ${STATUS.REJECTED}::status_enum 
+END
+WHERE id = ${requestId}
+RETURNING *;
+
 `;
     } catch (error) {
       console.log(error);

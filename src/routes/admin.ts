@@ -5,14 +5,26 @@ import {
   createUserValidationSchema,
   updateUserValidationSchema,
 } from "../middleware/schema/staff-user";
+import { approveRejectServicesSubmissionValidationSchema } from "../middleware/schema/approveRejectServicesSubmission";
 
 const admin_route = Router();
 const createStaffControllerData = new CreateStaffController();
 
 // admin_route.get("/dashboard", createStaffControllerData.adminDashBoard);
-
-admin_route.get("/new-service-requests", createStaffControllerData.getServicesSubmission);
-admin_route.get("/all-service-requests", createStaffControllerData.getAllServicesSubmission);
+admin_route.get(
+  "/all-service-requests",
+  createStaffControllerData.getAllServicesSubmission
+);
+admin_route.get(
+  "/new-service-requests",
+  createStaffControllerData.getNewServicesSubmission
+);
+admin_route.post(
+  "/approve-reject-service-requests",
+  approveRejectServicesSubmissionValidationSchema,
+  validator,
+  createStaffControllerData.approveRejectServicesSubmission
+);
 
 admin_route.post(
   "/create-staff",

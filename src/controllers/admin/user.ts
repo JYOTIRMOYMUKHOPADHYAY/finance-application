@@ -13,32 +13,42 @@ const registerService = new RegisterService();
 const loginService = new LoginService();
 const staffService = new StaffUserService();
 export class CreateStaffController {
-  constructor() // private staffService = new StaffUserService()
-  {}
+  constructor() {} // private staffService = new StaffUserService()
 
-  public async getServicesSubmission(req: Request, res: Response): Promise<void> {
+  public async getAllServicesSubmission(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     try {
-      const staffData = await staffService.getServicesSubmission();
-      return sendSuccessResponse(
-        res,
-        "Success",
-        staffData,
-        200
-      );
+      const staffData = await staffService.getAllServicesSubmission();
+      return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
       return sendErrorResponse(res, error.message, error, 400);
     }
   }
 
-  public async getAllServicesSubmission(req: Request, res: Response): Promise<void> {
+  public async getNewServicesSubmission(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     try {
-      const staffData = await staffService.getServicesSubmission(true);
-      return sendSuccessResponse(
-        res,
-        "Success",
-        staffData,
-        200
+      const staffData = await staffService.getNewServicesSubmission();
+      return sendSuccessResponse(res, "Success", staffData, 200);
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 400);
+    }
+  }
+
+  public async approveRejectServicesSubmission(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const staffData = await staffService.approveRejectServicesSubmission(
+        req.body.isApproved,
+        req.body.requestId
       );
+      return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
       return sendErrorResponse(res, error.message, error, 400);
     }
@@ -95,12 +105,7 @@ export class CreateStaffController {
   public async getAllStaff(req: Request, res: Response): Promise<void> {
     try {
       const staffData = await staffService.getUser(USERTYPE_ID.STAFF);
-      return sendSuccessResponse(
-        res,
-        "Success",
-        staffData,
-        200
-      );
+      return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
       return sendErrorResponse(res, error.message, error, 400);
     }
@@ -109,12 +114,7 @@ export class CreateStaffController {
   public async getAllCustomer(req: Request, res: Response): Promise<void> {
     try {
       const staffData = await staffService.getUser(USERTYPE_ID.CUSTOMER);
-      return sendSuccessResponse(
-        res,
-        "Success",
-        staffData,
-        200
-      );
+      return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
       return sendErrorResponse(res, error.message, error, 400);
     }
