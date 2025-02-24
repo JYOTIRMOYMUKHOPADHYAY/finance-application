@@ -6,6 +6,7 @@ import {
   updateUserValidationSchema,
 } from "../middleware/schema/staff-user";
 import { approveRejectServicesSubmissionValidationSchema } from "../middleware/schema/approveRejectServicesSubmission";
+import { CustomerController } from "../controllers/customer";
 
 const admin_route = Router();
 const createStaffControllerData = new CreateStaffController();

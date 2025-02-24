@@ -1,5 +1,5 @@
 import sql from "../../config/db";
-import { STATUS, USERTYPE_ID } from "../../globalVariable";
+import { STATUS } from "../../globalVariable";
 
 export default class UserRepository {
   constructor() {}
@@ -71,17 +71,23 @@ bsp.*,
   ): Promise<any> {
     try {
       return await sql`
-SELECT
-bsp.*,
-          s.name AS service_name,
-          s.id AS service_id,
-          ss.name AS sub_service_name,
-          ss.id AS sub_service_id
-      FROM bris_sole_proprietorship bsp
-      JOIN services s ON s.id = bsp.service_id
-      JOIN subservices ss ON ss.id = bsp.sub_service_id
-      WHERE bsp.status = ${status} 
+
+      SELECT
+    bsp.*,
+    s.name AS service_name,
+    s.id AS service_id,
+    ss.name AS sub_service_name,
+    ss.id AS sub_service_id,
+    u.name AS user_name,
+    u.email AS user_email,
+    u.phone_no AS user_phone
+FROM bris_sole_proprietorship bsp
+JOIN services s ON s.id = bsp.service_id
+JOIN subservices ss ON ss.id = bsp.sub_service_id
+JOIN userData u ON u.user_id = bsp.user_id
+WHERE bsp.status = ${status} 
       ORDER BY bsp.created_date DESC;
+
 `;
     } catch (error) {
       console.log(error);
@@ -90,19 +96,45 @@ bsp.*,
   }
 
   public async approveRejectServicesSubmission(
-    isApproved: boolean,
+    isApproved: boolean | string,
     requestId: number
   ): Promise<any> {
     try {
-      console.log(isApproved);
+      const status =
+        isApproved == true || isApproved == "true"
+          ? STATUS.APPROVED
+          : STATUS.REJECTED;
       return await sql`
 UPDATE bris_sole_proprietorship
-SET status = CASE 
-    WHEN ${isApproved} THEN ${STATUS.APPROVED}::status_enum 
-    ELSE ${STATUS.REJECTED}::status_enum 
-END
+SET status = ${status}::status_enum 
 WHERE id = ${requestId}
 RETURNING *;
+
+`;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  public async getServicesSubmisson(user_id: number): Promise<any> {
+    try {
+      return await sql`
+      SELECT
+    bsp.*,
+    s.name AS service_name,
+    s.id AS service_id,
+    ss.name AS sub_service_name,
+    ss.id AS sub_service_id,
+    u.name AS user_name,
+    u.email AS user_email,
+    u.phone_no AS user_phone
+FROM bris_sole_proprietorship bsp
+JOIN services s ON s.id = bsp.service_id
+JOIN subservices ss ON ss.id = bsp.sub_service_id
+JOIN userData u ON u.user_id = bsp.user_id
+WHERE bsp.user_id = ${user_id} 
+      ORDER BY bsp.created_date DESC;
 
 `;
     } catch (error) {

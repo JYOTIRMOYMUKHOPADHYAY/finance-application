@@ -48,10 +48,8 @@ type GroupedData = {
     >[];
   }[];
 };
-const groupApplicationsByService = (
-  applications: Application[]
-): GroupedData[] => {
-  const serviceMap = new Map<number, GroupedData>();
+const groupApplicationsByService = (applications: any[]): any[] => {
+  const serviceMap = new Map<number, any>();
 
   applications.forEach((app) => {
     if (!serviceMap.has(app.service_id)) {
@@ -64,9 +62,7 @@ const groupApplicationsByService = (
 
     const service = serviceMap.get(app.service_id)!;
 
-    let subService = service.data.find(
-      (sub) => sub.sub_service_id === app.sub_service_id
-    );
+    let subService = service.data.find((sub:any) => sub.sub_service_id === app.sub_service_id);
     if (!subService) {
       subService = {
         sub_service_id: app.sub_service_id,
@@ -79,10 +75,15 @@ const groupApplicationsByService = (
     subService.data.push({
       id: app.id,
       user_id: app.user_id,
+      user_name: app.user_name,       // Added user details
+      user_email: app.user_email,     // Added user details
+      user_phone: app.user_phone,     // Added user details
       mobileno: app.mobileno,
       mailid: app.mailid,
+      periodId: app.periodId,         // Added periodId
       message: app.message,
       filelink: app.filelink,
+      isDeleted: app.isDeleted,       // Added isDeleted field
       status: app.status,
       created_date: app.created_date,
     });
@@ -90,6 +91,7 @@ const groupApplicationsByService = (
 
   return Array.from(serviceMap.values());
 };
+
 
 export {
   hashPassword,

@@ -5,11 +5,12 @@ import { businessRegistrationValidationSchema } from "../middleware/schema/busin
 import { validator } from "../middleware/schemaValidator";
 import { partnershipFormValidationSchema } from "../middleware/schema/partneship-form";
 import { opcRegistrationValidationSchema } from "../middleware/schema/opc-registration";
+import { CustomerController } from "../controllers/customer";
 
 const services_router = Router();
 const businessRegistrationController =
   new BusinessRergistrationIncorporationController();
-
+  const customerController = new CustomerController()
 // sole-proprietorship
 services_router.post(
   "/bric",
@@ -19,6 +20,11 @@ services_router.post(
   businessRegistrationValidationSchema,
   validator,
   businessRegistrationController.soleProprietorship
+);
+
+services_router.get(
+  "/user-dashboard",
+  customerController.getServicesSubmisson
 );
 
 // Parternership Form
