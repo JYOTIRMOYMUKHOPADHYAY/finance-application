@@ -89,7 +89,7 @@ auth_router.post(
 
 // Generic dropdown
 auth_router.get(
-  "/generic-dropdown",
+  "/period-dropdown",
   genericMasterController.getDropdownData
 );
 

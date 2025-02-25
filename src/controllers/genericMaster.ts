@@ -12,7 +12,7 @@ export class GenericMasterController {
   public async getDropdownData(req: Request, res: Response): Promise<any> {
     try {
       const data = await genericMasterService.getDropdownData();
-      return sendSuccessResponse(res, "Form Submitted Success!",data[0]);
+      return sendSuccessResponse(res, "Form Submitted Success!",data[0].data);
     } catch (error) {
       console.log("=====getInTouch====");
       console.log(error);
