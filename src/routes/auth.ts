@@ -93,4 +93,9 @@ auth_router.get(
   genericMasterController.getDropdownData
 );
 
+auth_router.post(
+  "/file-download",
+  genericMasterController.downloadFile
+);
+
 export default auth_router;

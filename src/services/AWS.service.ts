@@ -1,10 +1,11 @@
-import { S3, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
 import path from "path";
 import { sanitizeFileName } from "../utils/utils";
 import archiver from "archiver";
 import * as stream from "stream";
 import { Upload } from "@aws-sdk/lib-storage";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 export class AWSService {
   private s3: S3;
   private snsClient: SNSClient;
@@ -119,6 +120,19 @@ export class AWSService {
     }
   }
 
+  async downloadFileFromS3(key: string, BUCKET_NAME: string): Promise<any> {
+    try {
+      const params = new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: key as string,
+      });
+      await this.s3.send(params);
+      return await getSignedUrl(this.s3, params, { expiresIn: 3600 });
+    } catch (error: any) {
+      console.error("Error downloadFileFromS3 file:", error);
+      throw error;
+    }
+  }
   // async uploadMultipleFilesToS3(
   //   files: Record<string, Express.Multer.File[]>,
   //   pathToUpload: string,
