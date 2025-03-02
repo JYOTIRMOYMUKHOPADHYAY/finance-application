@@ -33,7 +33,7 @@ export class StaffUserService {
   public async getNewServicesSubmission(): Promise<any> {
     try {
       const data = await this.staffRepo.getNewServicesSubmission();
-      return groupApplicationsByService(data);
+      return data;
     } catch (error) {
       throw error;
     }
