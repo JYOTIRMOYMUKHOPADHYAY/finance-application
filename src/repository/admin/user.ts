@@ -11,6 +11,9 @@ export default class UserRepository {
   SET 
       name = CASE WHEN name <> ${data.name} THEN ${data.name} ELSE name END,
       email = CASE WHEN email <> ${data.email} THEN ${data.email} ELSE email END,
+      qualification = CASE WHEN email <> ${data.qualification} THEN ${data.qualification} ELSE qualification END,
+      experience = CASE WHEN email <> ${data.experience} THEN ${data.experience} ELSE experience END,
+      service_id = CASE WHEN email <> ${data.service_id} THEN ${data.service_id} ELSE service_id END,
       updated_by = ${admin},
       updated_at = NOW()
   WHERE user_id = ${data.staff_id}
