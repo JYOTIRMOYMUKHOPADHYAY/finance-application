@@ -104,11 +104,12 @@ export class BusinessRegistrationIncorporationService {
     userData: any
   ): Promise<any> {
     try {    
+      console.log(userData);
       return await this.awsService.uploadMultipleFilesToS3(
         files! as Record<string, Express.Multer.File[]>,
         `${process.env.AWS_SERVICES_UPLOAD_PATH!}/${process.env
           .AWS_BUSINESS_REGISTRATION_FILE_UPLOAD_PATH!}`,
-        userData.user_id.toString()
+        userData.user_id
       );
     } catch (error) {
       console.log("====Service Error: uploadMultipleFilesToS3====");
