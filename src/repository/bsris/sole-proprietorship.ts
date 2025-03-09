@@ -28,12 +28,12 @@ export default class BRISSoleProprietorshipRepository {
             fileLink
         ) 
         VALUES (
-            ${data.userId},      
-            ${data.serviceId},
-            ${data.subServiceId},
+            ${Number(data.userId)},      
+            ${Number(data.serviceId)},
+            ${Number(data.subServiceId)},
             ${data.mobileNo},   
             ${data.mailId},    
-            ${data.periodId},
+            ${Number(data.periodId)},
             ${data.message},
             ${data.fileLink}  
         )
