@@ -6,6 +6,7 @@ export class ApplyJobService{
     ) {}
 
     public async applyForJob(data:any): Promise<any> {
+        console.log(data)
         return await this.applyJob.applyForJob(data);
     }
 }

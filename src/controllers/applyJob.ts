@@ -12,6 +12,7 @@ export class ApplyJobController {
   {}
 
   public async applyForJob(req: Request, res: Response): Promise<any> {
+    console.log(req.body)
     if (!req.file) {
       return sendErrorResponse(
         res,

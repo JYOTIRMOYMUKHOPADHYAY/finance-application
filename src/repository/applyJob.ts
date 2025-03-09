@@ -20,6 +20,7 @@ export default class ApplyJobRepository {
    */
   public async applyForJob(data: applyJob): Promise<any> {
     try {
+      console.log(data)
       return await sql`
       INSERT INTO applyToJob (
         name, email, phone_no, experience, current_location, user_type, agreement,status, filePath
