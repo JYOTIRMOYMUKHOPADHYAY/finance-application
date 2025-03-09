@@ -13,13 +13,12 @@ export class BusinessRegistrationIncorporationService {
 
   public async soleProprietorship(
     files: Record<string, Express.Multer.File[]>,
-    userData: any,
     fieldData: any
   ): Promise<any> {
     try {
-      const uploadData = await this.uploadMultipleFilesToS3(files, userData);
+      const uploadData = await this.uploadMultipleFilesToS3(files, fieldData.user_id);
       const registrationDetails = {
-        userId: userData.user_id,
+        userId: fieldData.user_id,
         serviceId: fieldData?.serviceId,
         subServiceId: fieldData?.subServiceId,
         mobileNo: fieldData?.mobileNo,

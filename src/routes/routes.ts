@@ -6,7 +6,8 @@ import admin_route from "./admin";
 
 const router = Router();
 router.use("/auth", auth_router);
-router.use("/services", validateJWT, services_router);
+// validateJWT
+router.use("/services", services_router);
 router.use("/admin", validateJWT, validateAdmin, admin_route);
 
 export default router;

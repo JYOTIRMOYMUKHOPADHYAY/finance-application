@@ -25,7 +25,6 @@ export class BusinessRergistrationIncorporationController {
       const userData = (req as any).user;
       await BRISService.soleProprietorship(
         req.files! as Record<string, Express.Multer.File[]>,
-        userData,
         req.body
       );
       return sendSuccessResponse(
