@@ -74,8 +74,8 @@ auth_router.post(
 auth_router.post(
   "/apply-for-job",
   upload.single("file"),
-  // applyJobValidationSchema,
-  // validator,
+  applyJobValidationSchema,
+  validator,
   applyJobController.applyForJob
 );
 

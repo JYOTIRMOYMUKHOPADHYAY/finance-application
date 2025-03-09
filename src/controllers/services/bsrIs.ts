@@ -4,6 +4,7 @@ import {
   sendSuccessResponse,
 } from "../../middleware/responseHandeler";
 import { BusinessRegistrationIncorporationService } from "../../services/bsris/bsris.service";
+import { sanitizeData } from "../../utils/utils";
 
 const BRISService = new BusinessRegistrationIncorporationService();
 export class BusinessRergistrationIncorporationController {
@@ -25,7 +26,7 @@ export class BusinessRergistrationIncorporationController {
       const userData = (req as any).user;
       await BRISService.soleProprietorship(
         req.files! as Record<string, Express.Multer.File[]>,
-        req.body
+        sanitizeData(req.body)
       );
       return sendSuccessResponse(
         res,
