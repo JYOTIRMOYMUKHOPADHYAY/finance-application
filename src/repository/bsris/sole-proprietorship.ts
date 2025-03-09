@@ -22,6 +22,7 @@ export default class BRISSoleProprietorshipRepository {
 
   public async soleProprietorship(data: BRISSoleProprietorship): Promise<any> {
     try {
+      console.log(data)
       return await sql`
         INSERT INTO BRIS_sole_proprietorship (
             user_id,service_id, sub_service_id, mobileNo, mailId, periodId, message, 
