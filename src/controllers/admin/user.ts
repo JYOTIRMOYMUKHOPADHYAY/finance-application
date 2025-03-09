@@ -5,7 +5,7 @@ import {
 } from "../../middleware/responseHandeler";
 import { RegisterService } from "../../services/register.service";
 import { LoginService } from "../../services/login.service";
-import { hashPassword } from "../../utils/utils";
+import { hashPassword, sanitizeData } from "../../utils/utils";
 import { USERTYPE_ID } from "../../globalVariable";
 import { StaffUserService } from "../../services/admin/user";
 
@@ -44,9 +44,10 @@ export class CreateStaffController {
     res: Response
   ): Promise<void> {
     try {
+      const data = sanitizeData(req.body)
       const staffData = await staffService.approveRejectServicesSubmission(
-        req.body.isApproved,
-        req.body.requestId
+        data.isApproved,
+        data.requestId
       );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
