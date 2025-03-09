@@ -92,10 +92,15 @@ const groupApplicationsByService = (applications: any[]): any[] => {
   return Array.from(serviceMap.values());
 };
 
-
+const sanitizeData = (data:{key: any, value: any}) => {
+  return Object.fromEntries(
+    Object.entries(data).map(([key, value]) => [key, value.replace(/^"|"$/g, '')])
+  );
+};
 export {
   hashPassword,
   verifyPassword,
   sanitizeFileName,
   groupApplicationsByService,
+  sanitizeData
 };

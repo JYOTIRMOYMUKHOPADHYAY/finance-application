@@ -5,6 +5,7 @@ import {
   sendSuccessResponse,
 } from "../middleware/responseHandeler";
 import { ApplyJobService } from "../services/applyJob.service";
+import { sanitizeData } from "../utils/utils";
 
 const applyJob = new ApplyJobService();
 export class ApplyJobController {
@@ -13,6 +14,7 @@ export class ApplyJobController {
 
   public async applyForJob(req: Request, res: Response): Promise<any> {
     console.log(req.body)
+    const data = sanitizeData(req.body);
     if (!req.file) {
       return sendErrorResponse(
         res,
@@ -21,7 +23,7 @@ export class ApplyJobController {
         401
       );
     }
-    if (!req.body.agreement || req.body.agreement != "true") {
+    if (!data.agreement || data.agreement != "true") {
       return sendErrorResponse(
         res,
         "Please accept the aggreement!",
@@ -34,11 +36,11 @@ export class ApplyJobController {
       req.file!,
       process.env.AWS_S3_RESUME_UPLOAD_PATH!
     );
-    req.body.filePath = uploadPath.location;
-    req.body.agreement = true;
-    req.body.user_type = 1;
-    req.body.status = "PENDING";
-    await applyJob.applyForJob(req.body);
+    data.filePath = uploadPath.location;
+    data.agreement = true;
+    data.user_type = 1;
+    data.status = "PENDING";
+    await applyJob.applyForJob(data);
     return sendSuccessResponse(res, "Applied Success!");
   }
 }
