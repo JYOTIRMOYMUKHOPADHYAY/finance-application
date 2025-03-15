@@ -145,4 +145,19 @@ WHERE bsp.user_id = ${user_id}
       throw error;
     }
   }
+
+  public async mapStaffUser(customer_id: number, staff_id: number, service_id: number): Promise<any> {
+    try {
+      return await sql`
+        INSERT INTO mapStaffCustomer (customer_id, staff_id, service_id)  
+        VALUES (${customer_id}, ${staff_id}, ${service_id})
+        ON CONFLICT (customer_id, service_id)  
+        DO UPDATE SET staff_id = EXCLUDED.staff_id, created_date = CURRENT_TIMESTAMP
+        RETURNING *;
+      `;
+    } catch (error) {
+      console.error("Error inserting/updating mapStaffCustomer:", error);
+      throw error;
+    }
+  }
 }

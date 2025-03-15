@@ -64,4 +64,12 @@ export class StaffUserService {
     }
   }
 
+  public async mapStaffCustomer(customerId: number, staffId: number, service_id: number): Promise<any> {
+    try {
+      const data = await this.staffRepo.mapStaffUser(customerId, staffId, service_id);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

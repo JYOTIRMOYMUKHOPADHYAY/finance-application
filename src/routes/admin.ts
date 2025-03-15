@@ -6,7 +6,6 @@ import {
   updateUserValidationSchema,
 } from "../middleware/schema/staff-user";
 import { approveRejectServicesSubmissionValidationSchema } from "../middleware/schema/approveRejectServicesSubmission";
-import { CustomerController } from "../controllers/customer";
 
 const admin_route = Router();
 const createStaffControllerData = new CreateStaffController();
@@ -44,6 +43,8 @@ admin_route.post(
 admin_route.get("/get-all-staff", createStaffControllerData.getAllStaff);
 
 admin_route.get("/get-all-customer", createStaffControllerData.getAllCustomer);
+
+admin_route.post("/map-staff-customer", createStaffControllerData.mapStaffCustomer);
 
 // admin_route.post(
 //   "/map-customer-staff",

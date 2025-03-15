@@ -166,3 +166,15 @@ CREATE TABLE BRIS_sole_proprietorship (
 --     FOREIGN KEY (sub_service_id) REFERENCES subservices(id) ON DELETE CASCADE,
 --     FOREIGN KEY (user_id) REFERENCES userdata(user_id)
 -- );
+
+CREATE TABLE mapStaffCustomer(
+    id SERIAL PRIMARY KEY,
+    customer_id INT NOT NULL,
+    staff_id INT NOT NULL,
+    service_id INT NOT NULL,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES userData(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (staff_id) REFERENCES userData(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
+    UNIQUE (customer_id, service_id)  -- Ensures one staff per customer per service
+);

@@ -123,4 +123,13 @@ export class CreateStaffController {
       return sendErrorResponse(res, error.message, error, 400);
     }
   }
+
+  public async mapStaffCustomer(req: Request, res: Response): Promise<void> {
+    try {
+      const staffData = await staffService.mapStaffCustomer(req.body.customer_id, req.body.staff_id, req.body.service_id);
+      return sendSuccessResponse(res, "Success", staffData, 200);
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 400);
+    }
+  }
 }

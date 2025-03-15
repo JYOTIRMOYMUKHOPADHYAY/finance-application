@@ -11,8 +11,6 @@ export const validateJWT = (
 ): void => {
   // Get token from header
   const token = req.header("Authorization")?.split(" ")[1]; // Expecting "Bearer <token>"
-  console.log("----")
-  console.log(token)
   if (!token) {
     res.status(401).json({ message: "Access Denied. No token provided." });
     return;
