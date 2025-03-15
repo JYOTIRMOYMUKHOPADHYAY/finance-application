@@ -11,7 +11,7 @@ export class CustomerController {
   public async getServicesSubmisson(req: Request, res: Response): Promise<void> {
   
     try {
-      const userData = (req as any).user;
+      const userData = req.body?.user_id;
       const data = await userService.getServicesSubmisson(
         userData
       );

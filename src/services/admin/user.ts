@@ -24,7 +24,7 @@ export class StaffUserService {
   public async getAllServicesSubmission(): Promise<any> {
     try {
       const data = await this.staffRepo.getAllServicesSubmission();
-      return groupApplicationsByService(data);
+      return data;
     } catch (error) {
       throw error;
     }
@@ -57,8 +57,8 @@ export class StaffUserService {
 
   public async getServicesSubmisson(userData:any): Promise<any> {
     try {
-      const data = await this.staffRepo.getServicesSubmisson(userData.user_id);
-      return groupApplicationsByService(data);
+      const data = await this.staffRepo.getServicesSubmisson(userData);
+      return data;
     } catch (error) {
       throw error;
     }

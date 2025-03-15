@@ -22,7 +22,7 @@ services_router.post(
   businessRegistrationController.soleProprietorship
 );
 
-services_router.get(
+services_router.post(
   "/user-dashboard",
   customerController.getServicesSubmisson
 );
