@@ -1,4 +1,5 @@
 import sql from "../../config/db";
+import { STATUS } from "../../globalVariable";
 
 interface applyJob {
   name: string;
@@ -19,7 +20,7 @@ export default class StaffRepository {
    * Get user details by mobile number.
    */
   public async getStaffDashboard(data: any): Promise<any> {
-      const query = `
+    const query = `
      SELECT
       bsp.*,
       s.name AS service_name,
@@ -35,18 +36,35 @@ export default class StaffRepository {
     WHERE
       msc.staff_id = $1;
     `;
-  
+
     try {
       const result = await sql.unsafe(query, [data]);
       return result;
     } catch (error) {
-      console.error('Error executing query:', error);
+      console.error("Error executing query:", error);
       throw error;
     }
-    
   }
 
-  // async function getStaffDashboard(staffId) {
-    
-  // }
+  public async approveRejectServicesSubmission(
+    isApproved: boolean | string,
+    requestId: number
+  ): Promise<any> {
+    try {
+      const status =
+        isApproved == true || isApproved == "true"
+          ? STATUS.APPROVED
+          : STATUS.REJECTED;
+      return await sql`
+UPDATE bris_sole_proprietorship
+SET status = ${status}::status_enum 
+WHERE id = ${requestId}
+RETURNING *;
+
+`;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }

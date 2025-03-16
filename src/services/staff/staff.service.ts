@@ -9,7 +9,10 @@ export class StaffService {
     return await this.servicesRepo.getStaffDashboard(data);
   }
 
-//   public async getSubServices(id: number): Promise<any> {
-//     return await this.servicesRepo.getSubServices(id);
-//   }
+  public async approveRejectServicesSubmission(
+    isApproved: boolean | string,
+    requestId: number
+  ): Promise<any> {
+    return await this.servicesRepo.approveRejectServicesSubmission(isApproved,requestId);
+  }
 }

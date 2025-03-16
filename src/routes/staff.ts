@@ -7,7 +7,7 @@ const stafff = new StaffController();
 staff_router.post("/staff-dashboard", stafff.getStaffDashboard);
 staff_router.post(
   "/staff-approve-reject-service-requests",
-  stafff.getStaffDashboard
+  stafff.approveRejectServicesSubmission
 );
 
 export default staff_router;
