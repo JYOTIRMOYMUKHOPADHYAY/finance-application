@@ -8,5 +8,6 @@ export const USERTYPE_ID = {
 export const STATUS = {
     APPROVED : "APPROVED",
     REJECTED : "REJECTED",
-    PENDING : 'PENDING'
+    PENDING : 'PENDING',
+    COMPLETED : 'COMPLETED'
 }

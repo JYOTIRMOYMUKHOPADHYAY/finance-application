@@ -105,7 +105,7 @@ WHERE bsp.status = ${status}
     try {
       const status =
         isApproved == true || isApproved == "true"
-          ? STATUS.APPROVED
+          ? STATUS.COMPLETED
           : STATUS.REJECTED;
       return await sql`
 UPDATE bris_sole_proprietorship
