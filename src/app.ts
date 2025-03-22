@@ -5,6 +5,7 @@ import { globalErrorHandler } from "./middleware/responseHandeler";
 import RedisService from "./redis/setUp";
 import cors from "cors";
 import bodyParser from "body-parser";
+import { setupSwagger } from "./swagger";
 export default class App {
   public app: Application;
   private port: number;
@@ -33,12 +34,17 @@ export default class App {
         exposedHeaders: "*", // Exposes all headers
         credentials: true, // Allows cookies and authorization headers
       })
-    );    
+    );
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    try {
+      setupSwagger(this.app);
+      console.log(`Swagger is running on http://localhost:${this.port}`);
+    } catch (err) {
+      console.log(err);
+    }
     // this.app.use(bodyParser.json());
     // this.app.use(bodyParser.urlencoded({ extended: true }));
-
   }
 
   private async initializeRoutes(): Promise<any> {
