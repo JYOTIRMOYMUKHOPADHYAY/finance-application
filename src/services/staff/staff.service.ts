@@ -5,6 +5,9 @@ export class StaffService {
     private servicesRepo = new StaffRepository()
   ) {}
 
+  public async getAllStaffDashboard(data: any): Promise<any> {
+    return await this.servicesRepo.getAllStaffDashboard(data);
+  }
   public async getStaffDashboard(data: any): Promise<any> {
     return await this.servicesRepo.getStaffDashboard(data);
   }

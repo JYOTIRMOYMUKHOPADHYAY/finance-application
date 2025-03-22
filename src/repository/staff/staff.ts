@@ -19,22 +19,63 @@ export default class StaffRepository {
   /**
    * Get user details by mobile number.
    */
+  public async getAllStaffDashboard(data: any): Promise<any> {
+    const query = `
+    SELECT
+    bsp.*,
+    s.name AS service_name,
+    ss.name AS sub_service_name,
+    ss.id AS sub_service_id,
+    u.name AS user_name,
+    u.email AS user_email,
+    u.phone_no AS user_phone
+FROM
+    mapStaffCustomer msc
+LEFT JOIN
+    BRIS_sole_proprietorship bsp ON msc.customer_id = bsp.user_id
+LEFT JOIN
+    services s ON bsp.service_id = s.id
+LEFT JOIN
+    subservices ss ON bsp.sub_service_id = ss.id
+LEFT JOIN 
+    userData u ON u.user_id = bsp.user_id  -- Ensure every user is fetched
+WHERE
+    msc.staff_id = $1;
+    `;
+
+    try {
+      const result = await sql.unsafe(query, [data]);
+      return result;
+    } catch (error) {
+      console.error("Error executing query:", error);
+      throw error;
+    }
+  }
+
   public async getStaffDashboard(data: any): Promise<any> {
     const query = `
-     SELECT
-      bsp.*,
-      s.name AS service_name,
-      ss.name AS sub_service_name
-    FROM
-      mapStaffCustomer msc
-    JOIN
-      BRIS_sole_proprietorship bsp ON msc.customer_id = bsp.user_id
-    JOIN
-      services s ON bsp.service_id = s.id
-    JOIN
-      subservices ss ON bsp.sub_service_id = ss.id
-    WHERE
-      msc.staff_id = $1;
+    SELECT
+    bsp.*,
+    s.name AS service_name,
+    ss.name AS sub_service_name,
+    ss.id AS sub_service_id,
+    u.name AS user_name,
+    u.email AS user_email,
+    u.phone_no AS user_phone
+FROM
+    mapStaffCustomer msc
+LEFT JOIN
+    BRIS_sole_proprietorship bsp ON msc.customer_id = bsp.user_id
+LEFT JOIN
+    services s ON bsp.service_id = s.id
+LEFT JOIN
+    subservices ss ON bsp.sub_service_id = ss.id
+LEFT JOIN 
+    userData u ON u.user_id = bsp.user_id
+WHERE
+    msc.staff_id = $1
+    AND bsp.status = 'PENDING';
+
     `;
 
     try {

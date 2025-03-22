@@ -10,6 +10,15 @@ const staffService = new StaffService();
 export class StaffController {
   constructor() {} // private staffService = new StaffUserService()
 
+  public async getAllStaffDashboard(req: Request, res: Response): Promise<void> {
+    try {
+      const data = await staffService.getAllStaffDashboard(req.body.staff_id);
+      return sendSuccessResponse(res, "Success", data, 200);
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 400);
+    }
+  }
+
   public async getStaffDashboard(req: Request, res: Response): Promise<void> {
     try {
       const data = await staffService.getStaffDashboard(req.body.staff_id);
