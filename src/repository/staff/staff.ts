@@ -108,4 +108,20 @@ RETURNING *;
       throw error;
     }
   }
+
+  public async removeStaffCustomerMapping(
+    customer_id: number,
+    service_id: number
+  ): Promise<any> {
+    try {
+      return await sql`
+DELETE FROM mapStaffCustomer
+WHERE customer_id = ${customer_id}
+AND service_id = ${service_id}
+`;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
