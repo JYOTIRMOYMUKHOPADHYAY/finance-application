@@ -42,6 +42,10 @@ CREATE TABLE subservices (
     CONSTRAINT fk_service FOREIGN KEY (service_id) REFERENCES services (id) ON DELETE CASCADE
 );
 
+ALTER TABLE subservices
+ADD COLUMN periodId INT,
+ADD CONSTRAINT fk_period FOREIGN KEY (periodId) REFERENCES genericMasterDropdown(id) ON DELETE SET NULL;
+
 -- Create the userTypes table
 CREATE TABLE userTypes (
     userType_id SERIAL PRIMARY KEY,

@@ -58,10 +58,17 @@ bsp.*,
           s.name AS service_name,
           s.id AS service_id,
           ss.name AS sub_service_name,
-          ss.id AS sub_service_id
+          ss.id AS sub_service_id,
+          msc.staff_id, -- If a match is found, this will have a value; otherwise, NULL
+           msc.created_date AS staff_mapping_created_date
       FROM bris_sole_proprietorship bsp
       JOIN services s ON s.id = bsp.service_id
-      JOIN subservices ss ON ss.id = bsp.sub_service_id;
+      JOIN subservices ss ON ss.id = bsp.sub_service_id
+      
+      
+      LEFT JOIN mapstaffcustomer msc 
+        ON bsp.user_id = msc.customer_id  -- Ensures correct user
+        AND bsp.service_id = msc.service_id  -- Ensures correct service match;
 `;
     } catch (error) {
       console.log(error);
@@ -69,34 +76,84 @@ bsp.*,
     }
   }
 
-  public async getNewServicesSubmission(
-    status: string = STATUS.PENDING
+//   public async getNewServicesSubmission(
+//     status: string = STATUS.PENDING
+//   ): Promise<any> {
+//     try {
+//       return await sql`
+
+//       SELECT
+//     bsp.*,
+//     s.name AS service_name,
+//     s.id AS service_id,
+//     ss.name AS sub_service_name,
+//     ss.id AS sub_service_id,
+//     u.name AS user_name,
+//     u.email AS user_email,
+//     u.phone_no AS user_phone
+// FROM bris_sole_proprietorship bsp
+// JOIN services s ON s.id = bsp.service_id
+// JOIN subservices ss ON ss.id = bsp.sub_service_id
+// JOIN userData u ON u.user_id = bsp.user_id
+// WHERE bsp.status = ${status} 
+//       ORDER BY bsp.created_date DESC;
+
+// `;
+//     } catch (error) {
+//       console.log(error);
+//       throw error;
+//     }
+//   }
+
+public async getNewServicesSubmission(
+  status: string = STATUS.PENDING
+): Promise<any> {
+  try {
+    return await sql`
+      SELECT
+        bsp.*,
+        s.name AS service_name,
+        s.id AS service_id,
+        ss.name AS sub_service_name,
+        ss.id AS sub_service_id,
+        u.name AS user_name,
+        u.email AS user_email,
+        u.phone_no AS user_phone,
+        msc.staff_id,  -- If a match is found, this will have a value; otherwise, NULL
+        msc.created_date AS staff_mapping_created_date
+      FROM bris_sole_proprietorship bsp
+      JOIN services s ON s.id = bsp.service_id
+      JOIN subservices ss ON ss.id = bsp.sub_service_id
+      JOIN userData u ON u.user_id = bsp.user_id
+     
+      LEFT JOIN mapstaffcustomer msc 
+        ON bsp.user_id = msc.customer_id  -- Ensures correct user
+        AND bsp.service_id = msc.service_id  -- Ensures correct service match
+
+      WHERE bsp.status = ${status} 
+      ORDER BY bsp.created_date DESC;
+    `;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+
+  public async getstaffMappingDetails(
+    customer_id: number 
   ): Promise<any> {
     try {
       return await sql`
 
-      SELECT
-    bsp.*,
-    s.name AS service_name,
-    s.id AS service_id,
-    ss.name AS sub_service_name,
-    ss.id AS sub_service_id,
-    u.name AS user_name,
-    u.email AS user_email,
-    u.phone_no AS user_phone
-FROM bris_sole_proprietorship bsp
-JOIN services s ON s.id = bsp.service_id
-JOIN subservices ss ON ss.id = bsp.sub_service_id
-JOIN userData u ON u.user_id = bsp.user_id
-WHERE bsp.status = ${status} 
-      ORDER BY bsp.created_date DESC;
-
+      SELECT * from mapstaffcustomer where customer_id = ${customer_id}
 `;
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
+  // JOIN mapstaffcustomer msc ON bsp.user_id = msc.customer_id
 
   public async approveRejectServicesSubmission(
     isApproved: boolean | string,
