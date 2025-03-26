@@ -7,11 +7,6 @@
     },
     "servers": [
       {
-        "url": "http://ec2-54-234-18-23.compute-1.amazonaws.com:3000/",
-        "name": "AWS Development Server",
-        "description": "AWS Development Server"
-      },
-      {
         "url": "http://ec2-54-234-18-23.compute-1.amazonaws.com:5000/",
         "name": "AWS Development Server",
         "description": "AWS Development Server"
