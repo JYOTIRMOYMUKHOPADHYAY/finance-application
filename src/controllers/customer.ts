@@ -9,9 +9,8 @@ export class CustomerController {
   constructor() {}
 
   public async getServicesSubmisson(req: Request, res: Response): Promise<void> {
-  
     try {
-      const userData = req.body?.user_id;
+      const userData = (req as any).user.user_id;
       const data = await userService.getServicesSubmisson(
         userData
       );

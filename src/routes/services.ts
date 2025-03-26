@@ -3,8 +3,6 @@ import { upload } from "../middleware/fileValidationCheck";
 import { BusinessRergistrationIncorporationController } from "../controllers/services/bsrIs";
 import { businessRegistrationValidationSchema } from "../middleware/schema/businessRegistrationController";
 import { validator } from "../middleware/schemaValidator";
-import { partnershipFormValidationSchema } from "../middleware/schema/partneship-form";
-import { opcRegistrationValidationSchema } from "../middleware/schema/opc-registration";
 import { CustomerController } from "../controllers/customer";
 
 const services_router = Router();
@@ -22,7 +20,7 @@ services_router.post(
   businessRegistrationController.soleProprietorship
 );
 
-services_router.post(
+services_router.get(
   "/user-dashboard",
   customerController.getServicesSubmisson
 );
