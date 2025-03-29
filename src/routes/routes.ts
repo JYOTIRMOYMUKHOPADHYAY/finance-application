@@ -7,9 +7,8 @@ import staff_route from "./staff";
 
 const router = Router();
 router.use("/auth", auth_router);
-// validateJWT
-router.use("/services", services_router);
+router.use("/services", validateJWT, services_router);
 router.use("/admin", validateJWT, validateAdmin, admin_route);
-router.use("/staff", staff_route);
+router.use("/staff",validateJWT, staff_route);
 
 export default router;

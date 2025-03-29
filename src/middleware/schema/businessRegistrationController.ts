@@ -6,6 +6,5 @@ export const businessRegistrationValidationSchema = [
   body("mobileNo", "Mobile No must not be empty").notEmpty(),
   body("mailId", "Mail ID must not be empty").notEmpty(),
   body("periodId", "Period must not be empty").notEmpty(),
-  body("message", "Mesage must not be empty").notEmpty(),
-  body("user_id", "user_id must not be empty").notEmpty()
+  body("message", "Mesage must not be empty").notEmpty()
 ];

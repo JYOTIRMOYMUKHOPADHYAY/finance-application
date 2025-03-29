@@ -54,7 +54,7 @@ WHERE
 
   public async getStaffDashboard(data: any): Promise<any> {
     const query = `
-    SELECT
+   SELECT DISTINCT ON (bsp.id)
     bsp.*,
     s.name AS service_name,
     ss.name AS sub_service_name,
@@ -75,7 +75,6 @@ LEFT JOIN
 WHERE
     msc.staff_id = $1
     AND bsp.status = 'PENDING';
-
     `;
 
     try {
@@ -102,6 +101,33 @@ SET status = ${status}::status_enum
 WHERE id = ${requestId}
 RETURNING *;
 
+`;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  public async checkUserStaffMapping(
+    user_id: number,
+    staff_id: number
+  ): Promise<any> {
+    try {
+      return await sql`
+SELECT * FROM mapStaffCustomer WHERE staff_id = ${staff_id} AND customer_id = ${user_id};
+`;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  public async getRequestDetails(
+    reqId: number
+  ): Promise<any> {
+    try {
+      return await sql`
+SELECT * FROM bris_sole_proprietorship WHERE id = ${reqId};
 `;
     } catch (error) {
       console.log(error);

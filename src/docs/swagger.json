@@ -7,7 +7,7 @@
     },
     "servers": [
       {
-        "url": "http://ec2-54-234-18-23.compute-1.amazonaws.com:3000/",
+        "url": "http://ec2-54-234-18-23.compute-1.amazonaws.com:5000/",
         "name": "AWS Development Server",
         "description": "AWS Development Server"
       },
@@ -62,6 +62,39 @@
                     "password": { "type": "string" }
                   },
                   "required": ["phone_no", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful login",
+              "content": {
+                "application/json": {
+                  "example": { "token": "jwt-token-here" }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/auth/refresh-token": {
+        "post": {
+          "summary": "Refresh Token",
+          "tags": ["Authentication"],
+       "requestBody": {
+            "required": true,
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "refreshToken": { "type": "string" }
+                  },
+                  "required": ["refreshToken"]
                 }
               }
             }
@@ -221,23 +254,10 @@
         }
       },
       "/api/services/user-dashboard": {
-        "post": {
+        "get": {
           "summary": "Customer Dashboard",
           "tags": ["Customer"],
           "security": [{ "bearerAuth": [] }],
-          "requestBody": {
-            "content": {
-              "application/x-www-form-urlencoded": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user_id": { "type": "string" }
-                  },
-                  "required": ["user_id"]
-                }
-              }
-            }
-          },
           "responses": {
             "200": {
               "description": "Success"
@@ -249,6 +269,7 @@
         "post": {
           "summary": "Service Submission",
           "tags": ["Customer"],
+          "security": [{ "bearerAuth": [] }],
           "requestBody": {
             "content": {
               "multipart/form-data": {
@@ -261,8 +282,7 @@
                     "mailId": { "type": "string" },
                     "periodId": { "type": "string" },
                     "message": { "type": "string" },
-                    "files": { "type": "string", "format": "binary" },
-                    "user_id": { "type": "string" }
+                    "files": { "type": "string", "format": "binary" }
                   },
                   "required": ["serviceId", "subServiceId", "mobileNo", "mailId", "periodId", "message", "files", "user_id"]
                 }
@@ -485,23 +505,23 @@
           }
         }
       },
+      "/api/staff/staff-all-dashboard": {
+        "get": {
+          "summary": "Staff All Dashboard",
+          "tags": ["Staff"],
+          "security": [{ "bearerAuth": [] }],
+          "responses": {
+            "200": {
+              "description": "Success"
+            }
+          }
+        }
+      },
       "/api/staff/staff-dashboard": {
-        "post": {
+        "get": {
           "summary": "Staff Dashboard",
           "tags": ["Staff"],
-          "requestBody": {
-            "content": {
-              "application/x-www-form-urlencoded": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "staff_id": { "type": "string" }
-                  },
-                  "required": ["staff_id"]
-                }
-              }
-            }
-          },
+          "security": [{ "bearerAuth": [] }],
           "responses": {
             "200": {
               "description": "Success"
@@ -524,30 +544,6 @@
                     "requestId": { "type": "string" }
                   },
                   "required": ["isApproved", "requestId"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Success"
-            }
-          }
-        }
-      },
-      "/api/staff/staff-all-dashboard": {
-        "post": {
-          "summary": "Staff All Dashboard",
-          "tags": ["Staff"],
-          "requestBody": {
-            "content": {
-              "application/x-www-form-urlencoded": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "staff_id": { "type": "string" }
-                  },
-                  "required": ["staff_id"]
                 }
               }
             }
