@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
+dotenv.config();
 const mySecrect = process.env.JWT_SECRECT || "secret";
 const expiresIn = process.env.JWT_EXPIRES_IN || 36600;
 const refreshTokenMySecrect = process.env.JWT_REFRESH_TOKEN_SECRECT || "secret";
