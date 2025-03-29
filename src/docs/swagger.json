@@ -81,6 +81,39 @@
           }
         }
       },
+      "/api/auth/refresh-token": {
+        "post": {
+          "summary": "Refresh Token",
+          "tags": ["Authentication"],
+       "requestBody": {
+            "required": true,
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "refreshToken": { "type": "string" }
+                  },
+                  "required": ["refreshToken"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful login",
+              "content": {
+                "application/json": {
+                  "example": { "token": "jwt-token-here" }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
       "/api/auth/user-types": {
         "get": {
           "summary": "Get User Types",

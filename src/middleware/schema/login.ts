@@ -6,3 +6,8 @@ export const loginValidationSchema = [
     min: 6,
   }),
 ];
+
+
+export const refreshToken = [
+  body("refreshToken", "Invalid does not Empty").not().isEmpty(),
+];
