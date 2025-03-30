@@ -59,12 +59,15 @@ bsp.*,
           s.id AS service_id,
           ss.name AS sub_service_name,
           ss.id AS sub_service_id,
+           u.name AS user_name,
+        u.email AS user_email,
+        u.phone_no AS user_phone,
           msc.staff_id, -- If a match is found, this will have a value; otherwise, NULL
            msc.created_date AS staff_mapping_created_date
       FROM bris_sole_proprietorship bsp
       JOIN services s ON s.id = bsp.service_id
       JOIN subservices ss ON ss.id = bsp.sub_service_id
-      
+      JOIN userData u ON u.user_id = bsp.user_id
       
       LEFT JOIN mapstaffcustomer msc 
         ON bsp.user_id = msc.customer_id  -- Ensures correct user
