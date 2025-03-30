@@ -55,8 +55,7 @@ export class StaffUserService {
     }
   }
 
-
-  public async getServicesSubmisson(userData:any): Promise<any> {
+  public async getServicesSubmisson(userData: any): Promise<any> {
     try {
       const data = await this.staffRepo.getServicesSubmisson(userData);
       return data;
@@ -65,9 +64,19 @@ export class StaffUserService {
     }
   }
 
-  public async mapStaffCustomer(customerId: number, staffId: number, service_id: number): Promise<any> {
+  public async mapStaffCustomer(
+    customerId: number,
+    staffId: number,
+    service_id: number,
+    requestId: number
+  ): Promise<any> {
     try {
-      const data = await this.staffRepo.mapStaffUser(customerId, staffId, service_id);
+      const data = await this.staffRepo.mapStaffUser(
+        customerId,
+        staffId,
+        service_id,
+        requestId
+      );
       return data;
     } catch (error) {
       throw error;

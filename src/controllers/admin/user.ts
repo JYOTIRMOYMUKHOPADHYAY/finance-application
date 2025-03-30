@@ -44,7 +44,7 @@ export class CreateStaffController {
     res: Response
   ): Promise<void> {
     try {
-      const data = sanitizeData(req.body)
+      const data = sanitizeData(req.body);
       const staffData = await staffService.approveRejectServicesSubmission(
         data.isApproved,
         data.requestId
@@ -126,7 +126,12 @@ export class CreateStaffController {
 
   public async mapStaffCustomer(req: Request, res: Response): Promise<void> {
     try {
-      const staffData = await staffService.mapStaffCustomer(req.body.customer_id, req.body.staff_id, req.body.service_id);
+      const staffData = await staffService.mapStaffCustomer(
+        req.body.customer_id,
+        req.body.staff_id,
+        req.body.service_id,
+        req.body.requestId
+      );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
       return sendErrorResponse(res, error.message, error, 400);
