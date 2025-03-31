@@ -40,7 +40,8 @@ LEFT JOIN
 LEFT JOIN 
     userData u ON u.user_id = bsp.user_id  -- Ensure every user is fetched
 WHERE
-    msc.staff_id = $1;
+    msc.staff_id = $1
+    AND bsp.status NOT IN ('PENDING', 'ASSIGNED');
     `;
 
     try {
@@ -74,7 +75,7 @@ LEFT JOIN
     userData u ON u.user_id = bsp.user_id
 WHERE
     msc.staff_id = $1
-    AND bsp.status = 'PENDING';
+    AND bsp.status in ('PENDING', 'ASSIGNED');
     `;
 
     try {
