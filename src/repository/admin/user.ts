@@ -47,7 +47,10 @@ export default class UserRepository {
       updated_by,
       updated_at,
       "isDeleted",
-      "isActive"
+      "isActive",
+      qualification,
+      experience,
+      service_id
   FROM userData WHERE userType_id = ${userType};
 `;
     } catch (error) {
