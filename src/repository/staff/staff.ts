@@ -21,7 +21,16 @@ export default class StaffRepository {
    */
   public async getAllStaffDashboard(data: any): Promise<any> {
     const query = `
-    SELECT
+   WITH customer_service_mapping AS (
+    SELECT 
+        customer_id, 
+        service_id 
+    FROM 
+        mapStaffCustomer 
+    WHERE 
+        staff_id = $1 -- Replace with actual staff_id
+)
+SELECT DISTINCT ON (bsp.id)
     bsp.*,
     s.name AS service_name,
     ss.name AS sub_service_name,
@@ -30,18 +39,19 @@ export default class StaffRepository {
     u.email AS user_email,
     u.phone_no AS user_phone
 FROM
-    mapStaffCustomer msc
-LEFT JOIN
-    BRIS_sole_proprietorship bsp ON msc.customer_id = bsp.user_id
+    customer_service_mapping csm
+JOIN
+    BRIS_sole_proprietorship bsp 
+    ON csm.customer_id = bsp.user_id 
+    AND csm.service_id = bsp.service_id  -- Ensures only relevant service data
 LEFT JOIN
     services s ON bsp.service_id = s.id
 LEFT JOIN
     subservices ss ON bsp.sub_service_id = ss.id
 LEFT JOIN 
-    userData u ON u.user_id = bsp.user_id  -- Ensure every user is fetched
+    userData u ON u.user_id = bsp.user_id
 WHERE
-    msc.staff_id = $1
-    AND bsp.status NOT IN ('PENDING', 'ASSIGNED');
+    bsp.status Not IN ('PENDING', 'ASSIGNED');
     `;
 
     try {
@@ -55,7 +65,16 @@ WHERE
 
   public async getStaffDashboard(data: any): Promise<any> {
     const query = `
-   SELECT DISTINCT ON (bsp.id)
+WITH customer_service_mapping AS (
+    SELECT 
+        customer_id, 
+        service_id 
+    FROM 
+        mapStaffCustomer 
+    WHERE 
+        staff_id = $1 -- Replace with actual staff_id
+)
+SELECT DISTINCT ON (bsp.id)
     bsp.*,
     s.name AS service_name,
     ss.name AS sub_service_name,
@@ -64,9 +83,11 @@ WHERE
     u.email AS user_email,
     u.phone_no AS user_phone
 FROM
-    mapStaffCustomer msc
-LEFT JOIN
-    BRIS_sole_proprietorship bsp ON msc.customer_id = bsp.user_id
+    customer_service_mapping csm
+JOIN
+    BRIS_sole_proprietorship bsp 
+    ON csm.customer_id = bsp.user_id 
+    AND csm.service_id = bsp.service_id  -- Ensures only relevant service data
 LEFT JOIN
     services s ON bsp.service_id = s.id
 LEFT JOIN
@@ -74,8 +95,7 @@ LEFT JOIN
 LEFT JOIN 
     userData u ON u.user_id = bsp.user_id
 WHERE
-    msc.staff_id = $1
-    AND bsp.status in ('PENDING', 'ASSIGNED');
+    bsp.status IN ('PENDING', 'ASSIGNED');
     `;
 
     try {
