@@ -130,7 +130,8 @@ export class CreateStaffController {
         req.body.customer_id,
         req.body.staff_id,
         req.body.service_id,
-        req.body.requestId
+        req.body.requestId,
+        (req as any).user.user_id
       );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {

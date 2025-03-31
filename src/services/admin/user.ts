@@ -68,14 +68,16 @@ export class StaffUserService {
     customerId: number,
     staffId: number,
     service_id: number,
-    requestId: number
+    requestId: number,
+    admin_id: number
   ): Promise<any> {
     try {
       const data = await this.staffRepo.mapStaffUser(
         customerId,
         staffId,
         service_id,
-        requestId
+        requestId,
+        admin_id
       );
       return data;
     } catch (error) {

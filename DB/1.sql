@@ -109,7 +109,17 @@ CREATE TABLE  getInTouch(
 -- Step 1: Create ENUM type for status
 CREATE TYPE status_enum AS ENUM ('APPROVED', 'REJECTED', 'PENDING' , 'COMPLETED', 'ASSIGNED');
 
-
+CREATE TABLE assigned_staff_service_data (
+    id SERIAL PRIMARY KEY,
+    staff_id INT NOT NULL,
+    sole_proprietorship_id INT NOT NULL,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by INT ,
+    updated_date TIMESTAMP,
+    FOREIGN KEY (sole_proprietorship_id) REFERENCES BRIS_sole_proprietorship(id) ON DELETE CASCADE,
+    FOREIGN KEY (staff_id) REFERENCES userdata(user_id),
+    FOREIGN KEY (updated_by) REFERENCES userdata(user_id)
+)
 CREATE TABLE BRIS_sole_proprietorship (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,   

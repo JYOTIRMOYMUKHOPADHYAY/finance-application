@@ -63,28 +63,31 @@ export default class UserRepository {
     status: string = STATUS.PENDING
   ): Promise<any> {
     try {
-      return await sql`
-SELECT
-bsp.*,
-          s.name AS service_name,
-          s.id AS service_id,
-          ss.name AS sub_service_name,
-          ss.id AS sub_service_id,
-           u.name AS user_name,
-        u.email AS user_email,
-        u.phone_no AS user_phone,
-          msc.staff_id, -- If a match is found, this will have a value; otherwise, NULL
-           msc.created_date AS staff_mapping_created_date
-      FROM bris_sole_proprietorship bsp
-      JOIN services s ON s.id = bsp.service_id
-      JOIN subservices ss ON ss.id = bsp.sub_service_id
-      JOIN userData u ON u.user_id = bsp.user_id
-      
-      LEFT JOIN mapstaffcustomer msc 
-        ON bsp.user_id = msc.customer_id  -- Ensures correct user
-        AND bsp.service_id = msc.service_id  -- Ensures correct service match
-        WHERE bsp.status <> 'PENDING';
-`;
+      const data = await sql`
+      SELECT
+      bsp.*,
+                s.name AS service_name,
+                s.id AS service_id,
+                ss.name AS sub_service_name,
+                ss.id AS sub_service_id,
+                 u.name AS user_name,
+              u.email AS user_email,
+              u.phone_no AS user_phone,
+                msc.staff_id, -- If a match is found, this will have a value; otherwise, NULL
+                 msc.created_date AS staff_mapping_created_date
+            FROM bris_sole_proprietorship bsp
+            JOIN services s ON s.id = bsp.service_id
+            JOIN subservices ss ON ss.id = bsp.sub_service_id
+            JOIN userData u ON u.user_id = bsp.user_id
+            
+            LEFT JOIN mapstaffcustomer msc 
+              ON bsp.user_id = msc.customer_id  -- Ensures correct user
+              AND bsp.service_id = msc.service_id  -- Ensures correct service match
+              WHERE bsp.status <> 'PENDING';
+      `;
+
+      // const oldData = 
+      return data
     } catch (error) {
       console.log(error);
       throw error;
@@ -219,7 +222,8 @@ WHERE bsp.user_id = ${user_id}
     customer_id: number,
     staff_id: number,
     service_id: number,
-    requestId: number
+    requestId: number,
+    admin_id: number
   ): Promise<any> {
     try {
       await sql`
@@ -227,6 +231,12 @@ WHERE bsp.user_id = ${user_id}
         VALUES (${customer_id}, ${staff_id}, ${service_id})
         ON CONFLICT (customer_id, service_id)  
         DO UPDATE SET staff_id = EXCLUDED.staff_id, created_date = CURRENT_TIMESTAMP
+        RETURNING *;
+      `;
+
+      await sql`
+        INSERT INTO assigned_staff_service_data (staff_id, sole_proprietorship_id, updated_by,updated_date)  
+        VALUES (${staff_id}, ${requestId}, ${admin_id}, CURRENT_TIMESTAMP)
         RETURNING *;
       `;
       return await sql`
