@@ -25,6 +25,7 @@ export class LoginController {
     try {
       const { phone_no, password } = req.body;
       const userData: any[] = await loginService.getUser(phone_no);
+      if(!userData) return sendErrorResponse(res, "User not found", null, 400);
       const verify = verifyPassword(
         password,
         userData[0].password,
@@ -39,11 +40,11 @@ export class LoginController {
         userData[0].refreshToken = refreshToken;
         return sendSuccessResponse(res, "User login successfully", userData[0]);
       }
-      return sendErrorResponse(res, "Invalid credentials", null, 401);
+      return sendErrorResponse(res, "Invalid credentials", null, 400);
     } catch (error) {
       console.log("=====login====");
       console.log(error);
-      return sendErrorResponse(res, "Invalid credentials", error, 401);
+      return sendErrorResponse(res, "Invalid credentials", error, 400);
     }
   }
 
@@ -69,7 +70,7 @@ export class LoginController {
     } catch (error) {
       console.log("=====generateRefreshToken====");
       console.log(error);
-      return sendErrorResponse(res, "Invalid credentials", error, 401);
+      return sendErrorResponse(res, "Invalid credentials", error, 400);
     }
   }
 }
