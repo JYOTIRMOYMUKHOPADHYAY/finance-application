@@ -16,7 +16,7 @@ export class GetInTouchController {
     } catch (error) {
       console.log("=====getInTouch====");
       console.log(error);
-      return sendErrorResponse(res, "Invalid data", error, 401);
+      return sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
 }

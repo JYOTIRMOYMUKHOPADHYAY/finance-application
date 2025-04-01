@@ -22,7 +22,7 @@ export class CustomerController {
     } catch (error) {
       console.log("====getServicesSubmisson====");
       console.log(error);
-      sendErrorResponse(res, "Invalid data", error, 401);
+      sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
 

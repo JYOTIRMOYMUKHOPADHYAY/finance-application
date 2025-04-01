@@ -16,7 +16,7 @@ export class StaffController {
       const data = await staffService.getAllStaffDashboard(user.user_id);
       return sendSuccessResponse(res, "Success", data, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -26,7 +26,7 @@ export class StaffController {
       const data = await staffService.getStaffDashboard(user.user_id);
       return sendSuccessResponse(res, "Success", data, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -41,7 +41,7 @@ export class StaffController {
       );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 }

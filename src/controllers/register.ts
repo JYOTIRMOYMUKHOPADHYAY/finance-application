@@ -17,7 +17,7 @@ export class RegisterController {
       const { name, phone_no, email, userType_id } = req.body;
       const user = await loginService.getUser(phone_no);
       if (user) {
-        return sendErrorResponse(res, "User Already Exists.", null, 400);
+        return sendErrorResponse(res, "User Already Exists.", null, 200);
       }
       const { salt, hash } = hashPassword(req.body.password);
       const userData = await registerService.register({
@@ -37,7 +37,7 @@ export class RegisterController {
         200
       );
     } catch (error:any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 }

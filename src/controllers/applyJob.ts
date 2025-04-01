@@ -19,7 +19,7 @@ export class ApplyJobController {
         res,
         "File is required",
         new Error("File is required"),
-        401
+        200
       );
     }
     if (!data.agreement || data.agreement != "true") {
@@ -27,7 +27,7 @@ export class ApplyJobController {
         res,
         "Please accept the aggreement!",
         new Error("Please accept the aggreement!"),
-        401
+        200
       );
     }
     const aws = new AWSService();

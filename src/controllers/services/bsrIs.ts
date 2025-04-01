@@ -18,7 +18,7 @@ export class BusinessRergistrationIncorporationController {
         res,
         "Files are required",
         null,
-        400
+        200
       );
       return;
     }
@@ -54,7 +54,7 @@ export class BusinessRergistrationIncorporationController {
         res,
         "Aadhaar card, PAN, ID card, Bank passbook page, Address proof, Rental agreement, NOC, GST certificate are required",
         null,
-        400
+        200
       );
       return;
     }
@@ -73,7 +73,7 @@ export class BusinessRergistrationIncorporationController {
     } catch (error) {
       console.log("====parternershipForm====");
       console.log(error);
-      sendErrorResponse(res, "Invalid data", error, 401);
+      sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
 
@@ -92,7 +92,7 @@ export class BusinessRergistrationIncorporationController {
         res,
         "Director Pan Card, Identity Proof, Address Proof, Registered Office Proof, NOC, Photograph, MOA, AOA are required",
         null,
-        400
+        200
       );
       return;
     }
@@ -111,7 +111,7 @@ export class BusinessRergistrationIncorporationController {
     } catch (error) {
       console.log("====opcRegistration====");
       console.log(error);
-      sendErrorResponse(res, "Invalid data", error, 401);
+      sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
 }

@@ -20,7 +20,7 @@ export class ServicesController {
     } catch (error) {
       console.log("=====getAllServices====");
       console.log(error);
-      return sendErrorResponse(res, "Invalid data", null, 401);
+      return sendErrorResponse(res, "Invalid data", null, 200);
     }
   }
 
@@ -28,7 +28,7 @@ export class ServicesController {
     try {
       const id = req.body.service_id;
       if (!id || isNaN(Number(id))) {
-        return sendErrorResponse(res, "Invalid ID", null, 401);
+        return sendErrorResponse(res, "Invalid ID", null, 200);
       }
       const data = await services.getSubServices(Number(id));
       return sendSuccessResponse(
@@ -39,7 +39,7 @@ export class ServicesController {
     } catch (error) {
       console.log("=====getSubServices====");
       console.log(error);
-      return sendErrorResponse(res, "Invalid data", null, 401);
+      return sendErrorResponse(res, "Invalid data", null, 200);
     }
   }
 }

@@ -26,7 +26,7 @@ export class ForgotPasswordController {
       const { phone_no } = req.body;
       const userData = await loginService.getUser(phone_no);
       if (!userData || userData.length == 0) {
-        return sendErrorResponse(res, "User not found", null, 400);
+        return sendErrorResponse(res, "User not found", null, 200);
       }
       const otp = otpGenerator.generateOtp();
       let message = `Your OTP is ${otp} Please do not share with anyone. It will expire in 5 minutes.`;
@@ -37,7 +37,7 @@ export class ForgotPasswordController {
     } catch (error: any) {
       console.log("=====forgotPassword====");
       console.log(error);
-      return sendErrorResponse(res, error?.message, error, 401);
+      return sendErrorResponse(res, error?.message, error, 200);
     }
   }
 
@@ -60,10 +60,10 @@ export class ForgotPasswordController {
       const { phone_no, otp, new_password } = req.body;
       const userData = await loginService.getUser(phone_no);
       if (!userData || userData.length == 0) {
-        return sendErrorResponse(res, "User not found", null, 400);
+        return sendErrorResponse(res, "User not found", null, 200);
       }
       const verify = await otpGenerator.verifyOtp(userData[0], otp);
-      if (!verify) return sendErrorResponse(res, "Invalid OTP", null, 400);
+      if (!verify) return sendErrorResponse(res, "Invalid OTP", null, 200);
       
       const { salt, hash } = hashPassword(new_password);
       const data = await loginService.updatePassword(phone_no, hash, salt);
@@ -73,7 +73,7 @@ export class ForgotPasswordController {
     } catch (error: any) {
       console.log("=====setForgotPassword====");
       console.log(error);
-      return sendErrorResponse(res, error?.message, error, 401);
+      return sendErrorResponse(res, error?.message, error, 200);
     }
   }
 }

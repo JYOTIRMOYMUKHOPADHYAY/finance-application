@@ -18,7 +18,7 @@ export class GenericMasterController {
     } catch (error) {
       console.log("=====getInTouch====");
       console.log(error);
-      return sendErrorResponse(res, "Invalid data", error, 401);
+      return sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
 
@@ -39,7 +39,7 @@ export class GenericMasterController {
         const key = req.body.key;
         sendErrorResponse(res, `File not found: ${key}`, error, 401);
       }
-      return sendErrorResponse(res, "Invalid data", error, 401);
+      return sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
 }

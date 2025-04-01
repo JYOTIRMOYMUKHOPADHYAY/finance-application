@@ -23,7 +23,7 @@ export class CreateStaffController {
       const staffData = await staffService.getAllServicesSubmission();
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -35,7 +35,7 @@ export class CreateStaffController {
       const staffData = await staffService.getNewServicesSubmission();
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -51,7 +51,7 @@ export class CreateStaffController {
       );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -59,7 +59,7 @@ export class CreateStaffController {
     const adminUser = (req as any).user;
     const user = await loginService.getUser(req.body.phone_no);
     if (user) {
-      return sendErrorResponse(res, "User Already Exists.", null, 400);
+      return sendErrorResponse(res, "User Already Exists.", null, 200);
     }
     try {
       const { salt, hash } = hashPassword(req.body.password);
@@ -84,7 +84,7 @@ export class CreateStaffController {
         200
       );
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -102,7 +102,7 @@ export class CreateStaffController {
         200
       );
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -111,7 +111,7 @@ export class CreateStaffController {
       const staffData = await staffService.getUser(USERTYPE_ID.STAFF);
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -120,7 +120,7 @@ export class CreateStaffController {
       const staffData = await staffService.getUser(USERTYPE_ID.CUSTOMER);
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -135,7 +135,7 @@ export class CreateStaffController {
       );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 }

@@ -27,7 +27,7 @@ export const validateJWT = (
         res,
         "Token expired. Please log in again.",
         error,
-        401
+        200
       );
     }
     if (error.name === "JsonWebTokenError") {
@@ -36,11 +36,11 @@ export const validateJWT = (
         res,
         "Invalid token. Access denied.",
         error,
-        403
+        200
       );
     }
     // res.status(403).json({ message: "Authentication failed." });
-    return sendErrorResponse(res, "Authentication failed.", error, 403);
+    return sendErrorResponse(res, "Authentication failed.", error, 200);
   }
 };
 
@@ -62,7 +62,7 @@ export const validateAdmin = (
       res,
       "Unauthorized. Authentication failed.",
       error,
-      403
+      200
     );
   }
 };
