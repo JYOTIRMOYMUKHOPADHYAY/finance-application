@@ -254,7 +254,7 @@
         }
       },
       "/api/services/user-dashboard": {
-        "get": {
+        "post": {
           "summary": "Customer Dashboard",
           "tags": ["Customer"],
           "security": [{ "bearerAuth": [] }],
