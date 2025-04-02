@@ -28,7 +28,17 @@ export default class ServicesRepository {
   public async getSubServices(id: number): Promise<any> {
     try {
       return await sql`
-       SELECT * FROM subservices WHERE service_id = ${id}`;
+       SELECT 
+    s.id, 
+    s.name, 
+    s.service_id, 
+    s.role_name,
+    s.periodid,
+    gmd.name AS period_name
+FROM subservices s
+LEFT JOIN genericMasterDropdown gmd ON s.periodId = gmd.id
+WHERE s.service_id = ${id};
+`;
     } catch (error) {
       throw error
     }
