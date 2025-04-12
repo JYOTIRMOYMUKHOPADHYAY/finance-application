@@ -84,4 +84,22 @@ export class StaffUserService {
       throw error;
     }
   }
+
+
+  public async searchReports(
+    status: string,
+    service_id: number,
+    staff_id: number
+  ): Promise<any> {
+    try {
+      const data = await this.staffRepo.searchReports(
+        status,
+        service_id,
+        staff_id
+      );
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

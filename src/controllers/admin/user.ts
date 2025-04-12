@@ -138,4 +138,21 @@ export class CreateStaffController {
       return sendErrorResponse(res, error.message, error, 200);
     }
   }
+
+  public async searchReports(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+     console.log(req.body)
+     const staffData = await staffService.searchReports(
+      req.body.status,
+      req.body.service_id,
+      req.body.staff_id,
+    );
+      return sendSuccessResponse(res, "Success", staffData, 200);
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 200);
+    }
+  }
 }

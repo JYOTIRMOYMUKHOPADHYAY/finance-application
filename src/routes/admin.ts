@@ -46,6 +46,11 @@ admin_route.get("/get-all-customer", createStaffControllerData.getAllCustomer);
 
 admin_route.post("/map-staff-customer", createStaffControllerData.mapStaffCustomer);
 
+admin_route.post(
+  "/search-report",
+  createStaffControllerData.searchReports
+);
+
 // admin_route.post(
 //   "/map-customer-staff",
 //   updateUserValidationSchema,

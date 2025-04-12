@@ -250,4 +250,65 @@ WHERE bsp.user_id = ${user_id}
       throw error;
     }
   }
+
+  public async searchReports(
+    status?: string,
+    service_id?: number,
+    staff_id?: number
+  ): Promise<any> {
+    try {
+      const conditions: string[] = [];
+      const params: any[] = [];
+  
+      if (status) {
+        conditions.push(`bsp.status = $${params.length + 1}`);
+        params.push(status);
+      }
+  
+      if (service_id) {
+        conditions.push(`bsp.service_id = $${params.length + 1}`);
+        params.push(service_id);
+      }
+  
+      if (staff_id) {
+        conditions.push(`msc.staff_id = $${params.length + 1}`);
+        params.push(staff_id);
+      }
+  
+      const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  
+      const query = `
+        SELECT 
+          bsp.*, 
+          u.name AS user_name,
+          u.phone_no AS user_phone,
+          s.name AS service_name,
+          ss.name AS sub_service_name,
+          msc.staff_id,
+          msc.created_date AS staff_mapping_created_date
+        FROM bris_sole_proprietorship bsp
+        JOIN services s ON s.id = bsp.service_id
+        JOIN subservices ss ON ss.id = bsp.sub_service_id
+        JOIN userData u ON u.user_id = bsp.user_id
+        LEFT JOIN mapstaffcustomer msc 
+          ON bsp.user_id = msc.customer_id 
+          AND bsp.service_id = msc.service_id
+        ${whereClause};
+      `;
+  
+      return await sql.unsafe(query, params);
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+      throw error;
+    }
+  }
+  
+  
 }
+
+
+
+
+
+
+
