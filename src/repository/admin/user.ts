@@ -74,7 +74,8 @@ export default class UserRepository {
               u.email AS user_email,
               u.phone_no AS user_phone,
                 msc.staff_id, -- If a match is found, this will have a value; otherwise, NULL
-                 msc.created_date AS staff_mapping_created_date
+                 msc.created_date AS staff_mapping_created_date,
+                 staff.name AS staff_name -- Get staff name
             FROM bris_sole_proprietorship bsp
             JOIN services s ON s.id = bsp.service_id
             JOIN subservices ss ON ss.id = bsp.sub_service_id
@@ -83,6 +84,7 @@ export default class UserRepository {
             LEFT JOIN mapstaffcustomer msc 
               ON bsp.user_id = msc.customer_id  -- Ensures correct user
               AND bsp.service_id = msc.service_id  -- Ensures correct service match
+              LEFT JOIN userData staff ON staff.user_id = msc.staff_id -- Join to get staff name
               WHERE bsp.status <> 'PENDING';
       `;
 
@@ -138,7 +140,8 @@ export default class UserRepository {
         u.email AS user_email,
         u.phone_no AS user_phone,
         msc.staff_id,  -- If a match is found, this will have a value; otherwise, NULL
-        msc.created_date AS staff_mapping_created_date
+        msc.created_date AS staff_mapping_created_date,
+        staff.name AS staff_name -- Get staff name
       FROM bris_sole_proprietorship bsp
       JOIN services s ON s.id = bsp.service_id
       JOIN subservices ss ON ss.id = bsp.sub_service_id
@@ -147,7 +150,7 @@ export default class UserRepository {
       LEFT JOIN mapstaffcustomer msc 
         ON bsp.user_id = msc.customer_id  -- Ensures correct user
         AND bsp.service_id = msc.service_id  -- Ensures correct service match
-
+        LEFT JOIN userData staff ON staff.user_id = msc.staff_id -- Join to get staff name
       WHERE bsp.status = ${status} 
       ORDER BY bsp.created_date DESC;
     `;
@@ -285,7 +288,8 @@ WHERE bsp.user_id = ${user_id}
           s.name AS service_name,
           ss.name AS sub_service_name,
           msc.staff_id,
-          msc.created_date AS staff_mapping_created_date
+          msc.created_date AS staff_mapping_created_date,
+          staff.name AS staff_name -- Get staff name
         FROM bris_sole_proprietorship bsp
         JOIN services s ON s.id = bsp.service_id
         JOIN subservices ss ON ss.id = bsp.sub_service_id
@@ -293,6 +297,7 @@ WHERE bsp.user_id = ${user_id}
         LEFT JOIN mapstaffcustomer msc 
           ON bsp.user_id = msc.customer_id 
           AND bsp.service_id = msc.service_id
+          LEFT JOIN userData staff ON staff.user_id = msc.staff_id -- Join to get staff name
         ${whereClause};
       `;
   
