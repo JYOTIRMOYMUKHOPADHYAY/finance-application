@@ -63,6 +63,74 @@ WHERE
     }
   }
 
+
+  public async searchStaffReport(data: {
+    staff_id: number;
+    status?: string;
+    service_id?: number;
+  }): Promise<any> {
+    const conditions: string[] = [];
+    const params: any[] = [data.staff_id]; // $1 is always staff_id
+  
+    // Dynamic conditions
+    if (data.status) {
+      conditions.push(`bsp.status = $${params.length + 1}`);
+      params.push(data.status);
+    }
+  
+    if (data.service_id) {
+      conditions.push(`bsp.service_id = $${params.length + 1}`);
+      params.push(data.service_id);
+    }
+  
+    // Always exclude 'PENDING' and 'ASSIGNED'
+    conditions.push(`bsp.status NOT IN ('PENDING', 'ASSIGNED')`);
+  
+    const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  
+    const query = `
+      WITH customer_service_mapping AS (
+        SELECT 
+            customer_id, 
+            service_id 
+        FROM 
+            mapStaffCustomer 
+        WHERE 
+            staff_id = $1
+      )
+      SELECT DISTINCT ON (bsp.id)
+          bsp.*,
+          s.name AS service_name,
+          ss.name AS sub_service_name,
+          ss.id AS sub_service_id,
+          u.name AS user_name,
+          u.email AS user_email,
+          u.phone_no AS user_phone
+      FROM
+          customer_service_mapping csm
+      JOIN
+          BRIS_sole_proprietorship bsp 
+          ON csm.customer_id = bsp.user_id 
+          AND csm.service_id = bsp.service_id
+      LEFT JOIN
+          services s ON bsp.service_id = s.id
+      LEFT JOIN
+          subservices ss ON bsp.sub_service_id = ss.id
+      LEFT JOIN 
+          userData u ON u.user_id = bsp.user_id
+      ${whereClause};
+    `;
+  
+    try {
+      const result = await sql.unsafe(query, params);
+      return result;
+    } catch (error) {
+      console.error("Error executing getAllStaffDashboard query:", error);
+      throw error;
+    }
+  }
+  
+
   public async getStaffDashboard(data: any): Promise<any> {
     const query = `
 WITH customer_service_mapping AS (

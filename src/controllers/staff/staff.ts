@@ -19,6 +19,22 @@ export class StaffController {
       return sendErrorResponse(res, error.message, error, 200);
     }
   }
+  
+  public async searchStaffReport(req: Request, res: Response): Promise<void> {
+    try {
+      const user = (req as any).user;
+      console.log(req.body)
+      const data = await staffService.searchStaffReport({
+        staff_id: user.user_id,
+        status: req.body.status,
+        service_id: req.body.service_id
+      });
+      return sendSuccessResponse(res, "Success", data, 200);
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 200);
+    }
+  }
+  
 
   public async getStaffDashboard(req: Request, res: Response): Promise<void> {
     try {
