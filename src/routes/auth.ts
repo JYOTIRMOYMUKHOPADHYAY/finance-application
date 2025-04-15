@@ -105,4 +105,14 @@ auth_router.post(
   genericMasterController.downloadFile
 );
 
+auth_router.get(
+  "/mounth-data",
+  genericMasterController.getMounthData
+);
+
+auth_router.post(
+  "/compliance-data",
+  genericMasterController.getComplianceData
+);
+
 export default auth_router;

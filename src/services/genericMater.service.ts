@@ -6,4 +6,11 @@ export class GenericMasterDataService {
   public async getDropdownData(): Promise<any> {
     return await this.genericMasterRepo.getDropdownData();
   }
+  public async getMounthData(): Promise<any> {
+    return await this.genericMasterRepo.getMounthData();
+  }
+
+  public async getComplianceData(id: number): Promise<any> {
+    return await this.genericMasterRepo.getComplianceData(id);
+  }
 }

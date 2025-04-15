@@ -42,4 +42,28 @@ export class GenericMasterController {
       return sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
+
+  public async getMounthData(req: Request, res: Response): Promise<any> {
+    try {
+      const data = await genericMasterService.getMounthData();
+      return sendSuccessResponse(res, "Success!", data);
+    } catch (error) {
+      console.log("=====getMounthData====");
+      console.log(error);
+      return sendErrorResponse(res, "Invalid data", error, 200);
+    }
+  }
+
+  public async getComplianceData(req: Request, res: Response): Promise<any> {
+    try {
+      const data = await genericMasterService.getComplianceData(
+        Number(req.body.id)
+      );
+      return sendSuccessResponse(res, "Success!", data);
+    } catch (error) {
+      console.log("=====getComplianceData====");
+      console.log(error);
+      return sendErrorResponse(res, "Invalid data", error, 200);
+    }
+  }
 }

@@ -192,3 +192,20 @@ CREATE TABLE mapStaffCustomer(
     FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
     UNIQUE (customer_id, service_id)  -- Ensures one staff per customer per service
 );
+
+
+CREATE TABLE ComplianceCalender (
+    id SERIAL PRIMARY KEY,
+    year INT NOT NULL,
+    month Varchar(255) NOT NULL,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+)
+CREATE TABLE ComplianceCalenderData (
+    id SERIAL PRIMARY KEY,
+    compliance_date_id INT NOT NULL,
+    date INT NOT NULL,
+    complianceName VARCHAR(555) NOT NULL,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (compliance_date_id) REFERENCES ComplianceCalender(id) ON DELETE CASCADE,
+)
+

@@ -20,4 +20,24 @@ export default class GenericMasterRepository {
       throw error;
     }
   }
+
+  public async getMounthData(): Promise<any> {
+    try {
+      return await sql`
+SELECT * FROM ComplianceCalender ORDER BY id ASC
+      `;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getComplianceData(id: number): Promise<any> {
+    try {
+      return await sql`
+SELECT * FROM ComplianceCalenderData WHERE compliance_date_id = ${id} ORDER BY date ASC
+      `;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
