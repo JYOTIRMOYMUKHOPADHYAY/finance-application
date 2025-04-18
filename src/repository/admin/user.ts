@@ -64,37 +64,37 @@ export default class UserRepository {
   ): Promise<any> {
     try {
       const data = await sql`
-      SELECT
-      bsp.*,
-                s.name AS service_name,
-                s.id AS service_id,
-                ss.name AS sub_service_name,
-                ss.id AS sub_service_id,
-                 u.name AS user_name,
-              u.email AS user_email,
-              u.phone_no AS user_phone,
-                msc.staff_id, -- If a match is found, this will have a value; otherwise, NULL
-                 msc.created_date AS staff_mapping_created_date,
-                 staff.name AS staff_name -- Get staff name
-            FROM bris_sole_proprietorship bsp
-            JOIN services s ON s.id = bsp.service_id
-            JOIN subservices ss ON ss.id = bsp.sub_service_id
-            JOIN userData u ON u.user_id = bsp.user_id
-            
-            LEFT JOIN mapstaffcustomer msc 
-              ON bsp.user_id = msc.customer_id  -- Ensures correct user
-              AND bsp.service_id = msc.service_id  -- Ensures correct service match
-              LEFT JOIN userData staff ON staff.user_id = msc.staff_id -- Join to get staff name
-              WHERE bsp.status <> 'PENDING';
+        SELECT
+          bsp.*,
+          s.name AS service_name,
+          s.id AS service_id,
+          ss.name AS sub_service_name,
+          ss.id AS sub_service_id,
+          u.name AS user_name,
+          u.email AS user_email,
+          u.phone_no AS user_phone,
+          COALESCE(CAST(msc.staff_id AS TEXT), 'NA') AS staff_id, -- Ensure it's text for 'NA'
+          msc.created_date AS staff_mapping_created_date,
+          COALESCE(staff.name, 'NA') AS staff_name
+        FROM bris_sole_proprietorship bsp
+        JOIN services s ON s.id = bsp.service_id
+        JOIN subservices ss ON ss.id = bsp.sub_service_id
+        JOIN userData u ON u.user_id = bsp.user_id
+        LEFT JOIN mapstaffcustomer msc 
+          ON bsp.user_id = msc.customer_id
+          AND bsp.service_id = msc.service_id
+        LEFT JOIN userData staff ON staff.user_id = msc.staff_id
+        WHERE bsp.status <> 'PENDING';
       `;
-
-      // const oldData = 
-      return data
+  
+      return data;
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
+  
+  
 
   //   public async getNewServicesSubmission(
   //     status: string = STATUS.PENDING
@@ -139,9 +139,9 @@ export default class UserRepository {
         u.name AS user_name,
         u.email AS user_email,
         u.phone_no AS user_phone,
-        msc.staff_id,  -- If a match is found, this will have a value; otherwise, NULL
+        COALESCE(CAST(msc.staff_id AS TEXT), 'NA') AS staff_id,  -- If a match is found, this will have a value; otherwise, NULL
         msc.created_date AS staff_mapping_created_date,
-        staff.name AS staff_name -- Get staff name
+        COALESCE(staff.name, 'NA') AS staff_name -- Get staff name
       FROM bris_sole_proprietorship bsp
       JOIN services s ON s.id = bsp.service_id
       JOIN subservices ss ON ss.id = bsp.sub_service_id
