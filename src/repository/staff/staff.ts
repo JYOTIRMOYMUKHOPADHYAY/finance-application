@@ -51,7 +51,7 @@ LEFT JOIN
 LEFT JOIN 
     userData u ON u.user_id = bsp.user_id
 WHERE
-    bsp.status Not IN ('PENDING', 'ASSIGNED');
+    bsp.status Not IN ('PENDING', 'ASSIGNED', 'ACCEPTED');
     `;
 
     try {
@@ -63,7 +63,6 @@ WHERE
     }
   }
 
-
   public async searchStaffReport(data: {
     staff_id: number;
     status?: string;
@@ -71,23 +70,25 @@ WHERE
   }): Promise<any> {
     const conditions: string[] = [];
     const params: any[] = [data.staff_id]; // $1 is always staff_id
-  
+
     // Dynamic conditions
     if (data.status) {
       conditions.push(`bsp.status = $${params.length + 1}`);
       params.push(data.status);
     }
-  
+
     if (data.service_id) {
       conditions.push(`bsp.service_id = $${params.length + 1}`);
       params.push(data.service_id);
     }
-  
+
     // Always exclude 'PENDING' and 'ASSIGNED'
     conditions.push(`bsp.status NOT IN ('PENDING', 'ASSIGNED')`);
-  
-    const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
-  
+
+    const whereClause = conditions.length
+      ? `WHERE ${conditions.join(" AND ")}`
+      : "";
+
     const query = `
       WITH customer_service_mapping AS (
         SELECT 
@@ -120,7 +121,7 @@ WHERE
           userData u ON u.user_id = bsp.user_id
       ${whereClause};
     `;
-  
+
     try {
       const result = await sql.unsafe(query, params);
       return result;
@@ -129,7 +130,6 @@ WHERE
       throw error;
     }
   }
-  
 
   public async getStaffDashboard(data: any): Promise<any> {
     const query = `
@@ -163,7 +163,7 @@ LEFT JOIN
 LEFT JOIN 
     userData u ON u.user_id = bsp.user_id
 WHERE
-    bsp.status IN ('PENDING', 'ASSIGNED');
+    bsp.status IN ('PENDING', 'ASSIGNED', 'ACCEPTED');
     `;
 
     try {
@@ -176,14 +176,16 @@ WHERE
   }
 
   public async approveRejectServicesSubmission(
-    isApproved: boolean | string,
-    requestId: number
+    isAccepted: boolean | string,
+    requestId: number,
+    isSubmitted?: boolean
   ): Promise<any> {
     try {
-      const status =
-        isApproved == true || isApproved == "true"
-          ? STATUS.APPROVED
-          : STATUS.REJECTED;
+      const status = isSubmitted
+        ? STATUS.SUBMITTED
+        : isAccepted == true || isAccepted == "true"
+        ? STATUS.ACCEPTED
+        : STATUS.PENDING;
       return await sql`
 UPDATE bris_sole_proprietorship
 SET status = ${status}::status_enum 
@@ -211,9 +213,7 @@ SELECT * FROM mapStaffCustomer WHERE staff_id = ${staff_id} AND customer_id = ${
     }
   }
 
-  public async getRequestDetails(
-    reqId: number
-  ): Promise<any> {
+  public async getRequestDetails(reqId: number): Promise<any> {
     try {
       return await sql`
 SELECT * FROM bris_sole_proprietorship WHERE id = ${reqId};
