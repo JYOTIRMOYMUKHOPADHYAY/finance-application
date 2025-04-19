@@ -30,12 +30,11 @@ export class StaffService {
     if (!isDataExists || isDataExists.length == 0) {
       throw new Error("No data found");
     }
-    if (reqDetails[0].status == STATUS.PENDING && isSubmitted) {
-      throw new Error("Please accept the request first");
-    }
-
     if (reqDetails[0].status == STATUS.SUBMITTED) {
       throw new Error("Request already submitted.");
+    }
+    if (reqDetails[0].status != STATUS.ACCEPTED && isSubmitted) {
+      throw new Error("Please accept the request first");
     }
     if (!isSubmitted) {
       const data = await this.servicesRepo.approveRejectServicesSubmission(
