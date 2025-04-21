@@ -144,7 +144,6 @@ export class CreateStaffController {
     res: Response
   ): Promise<void> {
     try {
-      console.log(req.body.status)
      const staffData = await staffService.searchReports(
       req.body.status == 'NONE' ? null : req.body.status,
       req.body.service_id,
