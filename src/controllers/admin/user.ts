@@ -144,11 +144,11 @@ export class CreateStaffController {
     res: Response
   ): Promise<void> {
     try {
-     console.log(req.body)
+      console.log(req.body.status)
      const staffData = await staffService.searchReports(
-      req.body.status,
+      req.body.status == 'NONE' ? null : req.body.status,
       req.body.service_id,
-      req.body.staff_id,
+      req.body.staff_id == 'NONE' ? null : req.body.staff_id,
     );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
