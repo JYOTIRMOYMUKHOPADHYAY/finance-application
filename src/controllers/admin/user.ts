@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  ApiResponse,
   sendErrorResponse,
   sendSuccessResponse,
 } from "../../middleware/responseHandeler";
@@ -21,7 +22,16 @@ export class CreateStaffController {
   ): Promise<void> {
     try {
       const staffData = await staffService.getAllServicesSubmission();
-      return sendSuccessResponse(res, "Success", staffData, 200);
+
+      const response: any = {
+        success: true,
+        message: "Success",
+        data: staffData.data,
+        statusCount: staffData.statusData,
+      };
+      res.status(200).json(response);
+
+      // return sendSuccessResponse(res, "Success", {...staffData}, 200);
     } catch (error: any) {
       return sendErrorResponse(res, error.message, error, 200);
     }
@@ -139,16 +149,13 @@ export class CreateStaffController {
     }
   }
 
-  public async searchReports(
-    req: Request,
-    res: Response
-  ): Promise<void> {
+  public async searchReports(req: Request, res: Response): Promise<void> {
     try {
-     const staffData = await staffService.searchReports(
-      req.body.status == 'NONE' ? null : req.body.status,
-      req.body.service_id,
-      req.body.staff_id == 'NONE' ? null : req.body.staff_id,
-    );
+      const staffData = await staffService.searchReports(
+        req.body.status == "NONE" ? null : req.body.status,
+        req.body.service_id == "NONE" ? null : req.body.service_id,
+        req.body.staff_id == "NONE" ? null : req.body.staff_id
+      );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
       return sendErrorResponse(res, error.message, error, 200);

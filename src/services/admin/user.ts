@@ -24,12 +24,23 @@ export class StaffUserService {
   public async getAllServicesSubmission(): Promise<any> {
     try {
       const data = await this.staffRepo.getAllServicesSubmission();
-      return data;
+      const statusData = Object.entries(this.getStatusCounts(data)).map(([status, count]) => ({
+        status,
+        count
+      }));
+      return {data,statusData};
     } catch (error) {
       throw error;
     }
   }
 
+  private getStatusCounts(data: any) {
+    return data.reduce((acc: any, item: any) => {
+      const status = item.status;
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {});
+  } 
   public async getNewServicesSubmission(): Promise<any> {
     try {
       const data = await this.staffRepo.getNewServicesSubmission();
