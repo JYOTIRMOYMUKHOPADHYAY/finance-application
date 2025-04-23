@@ -1,4 +1,4 @@
-import { USERTYPE_ID } from "../../globalVariable";
+import { STATUS } from "../../globalVariable";
 import UserRepository from "../../repository/admin/user";
 import { groupApplicationsByService } from "../../utils/utils";
 
@@ -24,23 +24,26 @@ export class StaffUserService {
   public async getAllServicesSubmission(): Promise<any> {
     try {
       const data = await this.staffRepo.getAllServicesSubmission();
-      const statusData = Object.entries(this.getStatusCounts(data)).map(([status, count]) => ({
-        status,
-        count
-      }));
+      const statusData = this.getFullStatusCounts(data);
       return {data,statusData};
     } catch (error) {
       throw error;
     }
   }
 
-  private getStatusCounts(data: any) {
-    return data.reduce((acc: any, item: any) => {
-      const status = item.status;
-      acc[status] = (acc[status] || 0) + 1;
-      return acc;
-    }, {});
-  } 
+  private getFullStatusCounts(data : any) {
+    const newStatus = { ...STATUS } as Record<string, string>;
+    delete newStatus.PENDING;
+    const counts = Object.fromEntries(Object.values(newStatus).map(status => [status, 0]));
+  
+    data.forEach((item:any) => {
+      if (counts.hasOwnProperty(item.status)) {
+        counts[item.status]++;
+      }
+    });
+  
+    return Object.entries(counts).map(([status, count]) => ({ status, count }));;
+  }
   public async getNewServicesSubmission(): Promise<any> {
     try {
       const data = await this.staffRepo.getNewServicesSubmission();
