@@ -40,4 +40,24 @@ SELECT * FROM ComplianceCalenderData WHERE compliance_date_id = ${id} ORDER BY d
       throw error;
     }
   }
+
+  public async getLinksData(): Promise<any> {
+    try {
+      return await sql`
+SELECT * FROM externalLinks ORDER BY ID ASC;
+      `;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async newsUpdatesData(): Promise<any> {
+    try {
+      return await sql`
+SELECT * FROM newsUpdateData WHERE isDeleted = false ORDER BY CREATED_DATE DESC;
+      `;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -13,4 +13,10 @@ export class GenericMasterDataService {
   public async getComplianceData(id: number): Promise<any> {
     return await this.genericMasterRepo.getComplianceData(id);
   }
+  public async getLinksData(): Promise<any> {
+    return await this.genericMasterRepo.getLinksData();
+  }
+  public async newsUpdatesData(): Promise<any> {
+    return await this.genericMasterRepo.newsUpdatesData();
+  }
 }

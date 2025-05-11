@@ -6,11 +6,12 @@ import {
   updateUserValidationSchema,
 } from "../middleware/schema/staff-user";
 import { approveRejectServicesSubmissionValidationSchema } from "../middleware/schema/approveRejectServicesSubmission";
+import { UpdateNewsController } from "../controllers/admin/newsUpdate";
 
 const admin_route = Router();
 const createStaffControllerData = new CreateStaffController();
+const newsUpdatesController = new UpdateNewsController();
 
-// admin_route.get("/dashboard", createStaffControllerData.adminDashBoard);
 admin_route.get(
   "/all-service-requests",
   createStaffControllerData.getAllServicesSubmission
@@ -49,6 +50,11 @@ admin_route.post("/map-staff-customer", createStaffControllerData.mapStaffCustom
 admin_route.post(
   "/search-report",
   createStaffControllerData.searchReports
+);
+
+admin_route.post(
+  "/news-updates",
+  newsUpdatesController.newsUpdatesData
 );
 
 // admin_route.post(

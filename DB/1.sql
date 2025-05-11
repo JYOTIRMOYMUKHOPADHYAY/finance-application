@@ -229,3 +229,21 @@ CREATE TABLE ComplianceCalenderData (
     FOREIGN KEY (compliance_date_id) REFERENCES ComplianceCalender(id) ON DELETE CASCADE,
 )
 
+-- Create the Links table
+CREATE TABLE externalLinks (
+    id SERIAL PRIMARY KEY,       -- Auto-incrementing primary key
+    name VARCHAR(555) NOT NULL,  -- Name of the External Links
+    url VARCHAR(555) NOT NULL -- URL of the External Links
+);
+
+
+-- Create the News Update table
+CREATE TABLE newsUpdateData (
+    id SERIAL PRIMARY KEY,       -- Auto-incrementing primary key
+    message VARCHAR(555) NOT NULL,  -- Message Update
+    isDeleted BOOLEAN NOT NULL DEFAULT FALSE, -- 
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by INT NOT NULL,
+    updated_by INT,
+    updated_date TIMESTAMP 
+);

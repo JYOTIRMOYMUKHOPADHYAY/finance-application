@@ -66,4 +66,26 @@ export class GenericMasterController {
       return sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
+
+  public async getLinksData(req: Request, res: Response): Promise<any> {
+    try {
+      const data = await genericMasterService.getLinksData();
+      return sendSuccessResponse(res, "Success!", data);
+    } catch (error) {
+      console.log("=====getLinksData====");
+      console.log(error);
+      return sendErrorResponse(res, "Invalid data", error, 200);
+    }
+  }
+
+  public async newsUpdatesData(req: Request, res: Response): Promise<any> {
+    try {
+      const data = await genericMasterService.newsUpdatesData();
+      return sendSuccessResponse(res, "Success!", data);
+    } catch (error) {
+      console.log("=====newsUpdatesData====");
+      console.log(error);
+      return sendErrorResponse(res, "Invalid data", error, 200);
+    }
+  }
 }

@@ -115,4 +115,14 @@ auth_router.post(
   genericMasterController.getComplianceData
 );
 
+auth_router.get(
+  "/general-links",
+  genericMasterController.getLinksData
+);
+
+auth_router.get(
+  "/news-updates",
+  genericMasterController.newsUpdatesData
+);
+
 export default auth_router;
