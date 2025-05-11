@@ -220,6 +220,9 @@ CREATE TABLE ComplianceCalender (
     month Varchar(255) NOT NULL,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 )
+ALTER TABLE ComplianceCalender
+ADD COLUMN isDeleted BOOLEAN DEFAULT FALSE;
+
 CREATE TABLE ComplianceCalenderData (
     id SERIAL PRIMARY KEY,
     compliance_date_id INT NOT NULL,
