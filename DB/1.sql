@@ -46,6 +46,10 @@ ALTER TABLE subservices
 ADD COLUMN periodId INT,
 ADD CONSTRAINT fk_period FOREIGN KEY (periodId) REFERENCES genericMasterDropdown(id) ON DELETE SET NULL;
 
+ALTER TABLE subservices
+ADD COLUMN documents_required INT;
+
+
 -- Create the userTypes table
 CREATE TABLE userTypes (
     userType_id SERIAL PRIMARY KEY,

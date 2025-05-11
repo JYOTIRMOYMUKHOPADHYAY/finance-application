@@ -69,7 +69,7 @@ export class CreateStaffController {
     const adminUser = (req as any).user;
     const user = await loginService.getUser(req.body.phone_no);
     if (user) {
-      return sendErrorResponse(res, "User Already Exists.", null, 200);
+      return sendErrorResponse(res, "User already registered with this phone no.", null, 200);
     }
     try {
       const { salt, hash } = hashPassword(req.body.password);
@@ -89,7 +89,7 @@ export class CreateStaffController {
       delete userData[0].password_salt;
       return sendSuccessResponse(
         res,
-        "User register successfully",
+        "Staff Created successfully.",
         userData[0],
         200
       );
@@ -101,14 +101,19 @@ export class CreateStaffController {
   public async updateStaff(req: Request, res: Response): Promise<void> {
     const adminUser = (req as any).user;
     const staffUser = req.body;
+    const userData = await loginService.getUser(staffUser.phone_no);
+    if(userData) {
+      return sendErrorResponse(res, "User already registered with this phone no.", null, 200);
+    }
+    console.log(staffUser)
     try {
       const staffData = await staffService.updateStaff(staffUser, adminUser);
       delete staffData[0].password;
       delete staffData[0].password_salt;
       return sendSuccessResponse(
         res,
-        "User register successfully",
-        staffData[0],
+        "Staff Updated successfully.",
+        "staffData[0]",
         200
       );
     } catch (error: any) {

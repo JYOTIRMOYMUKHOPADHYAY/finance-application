@@ -13,6 +13,9 @@ export default class UserRepository {
       email = CASE WHEN email <> ${data.email} THEN ${
         data.email
       } ELSE email END,
+      phone_no = CASE WHEN phone_no <> ${data.phone_no} THEN ${
+        data.phone_no
+      } ELSE phone_no END,
       qualification = CASE WHEN email <> ${data?.qualification || null} THEN ${
         data?.qualification || null
       } ELSE qualification END,

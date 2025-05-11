@@ -34,10 +34,11 @@ export default class ServicesRepository {
     s.service_id, 
     s.role_name,
     s.periodid,
+    s.documents_required,
     gmd.name AS period_name
 FROM subservices s
 LEFT JOIN genericMasterDropdown gmd ON s.periodId = gmd.id
-WHERE s.service_id = ${id};
+WHERE s.service_id = ${id} ORDER BY s.id;
 `;
     } catch (error) {
       throw error
