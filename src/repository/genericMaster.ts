@@ -54,7 +54,7 @@ SELECT * FROM externalLinks ORDER BY ID ASC;
   public async newsUpdatesData(): Promise<any> {
     try {
       return await sql`
-SELECT * FROM newsUpdateData WHERE isDeleted = false ORDER BY CREATED_DATE DESC;
+SELECT * FROM newsUpdateData WHERE isDeleted = false ORDER BY CREATED_DATE DESC LIMIT 3;
       `;
     } catch (error) {
       throw error;
