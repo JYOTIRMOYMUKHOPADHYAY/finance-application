@@ -60,4 +60,14 @@ SELECT * FROM newsUpdateData WHERE isDeleted = false ORDER BY CREATED_DATE DESC 
       throw error;
     }
   }
+
+  public async getCarriersData(): Promise<any> {
+    try {
+      return await sql`
+SELECT * FROM applytojob ORDER BY id DESC;
+      `;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

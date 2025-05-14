@@ -19,4 +19,7 @@ export class GenericMasterDataService {
   public async newsUpdatesData(): Promise<any> {
     return await this.genericMasterRepo.newsUpdatesData();
   }
+  public async getCarriersData(): Promise<any> {
+    return await this.genericMasterRepo.getCarriersData();
+  }
 }

@@ -125,4 +125,9 @@ auth_router.get(
   genericMasterController.newsUpdatesData
 );
 
+auth_router.get(
+  "/get-carrier-submission",
+  genericMasterController.getCarriersData
+);
+
 export default auth_router;

@@ -88,4 +88,15 @@ export class GenericMasterController {
       return sendErrorResponse(res, "Invalid data", error, 200);
     }
   }
+
+  public async getCarriersData(req: Request, res: Response): Promise<any> {
+    try {
+      const data = await genericMasterService.getCarriersData();
+      return sendSuccessResponse(res, "Success!", data);
+    } catch (error) {
+      console.log("=====getCarriersData====");
+      console.log(error);
+      return sendErrorResponse(res, "Invalid data", error, 200);
+    }
+  }
 }
