@@ -3,30 +3,39 @@ import { validator } from "../middleware/schemaValidator";
 import { CreateStaffController } from "../controllers/admin/user";
 import {
   createUserValidationSchema,
+  updateReviewerUserValidationSchema,
   updateUserValidationSchema,
 } from "../middleware/schema/staff-user";
 import { approveRejectServicesSubmissionValidationSchema } from "../middleware/schema/approveRejectServicesSubmission";
 import { UpdateNewsController } from "../controllers/admin/newsUpdate";
+import { CreateReviewerController } from "../controllers/admin/reviewer";
+import { AdminController } from "../controllers/admin/admin";
 
 const admin_route = Router();
 const createStaffControllerData = new CreateStaffController();
+const createReviewerController = new CreateReviewerController();
 const newsUpdatesController = new UpdateNewsController();
+const adminController = new AdminController();
 
+// ADMIN SPECIFIC FUNCTIONALITY
 admin_route.get(
   "/all-service-requests",
-  createStaffControllerData.getAllServicesSubmission
+  adminController.getAllServicesSubmission
 );
 admin_route.get(
   "/new-service-requests",
-  createStaffControllerData.getNewServicesSubmission
+  adminController.getNewServicesSubmission
 );
 admin_route.post(
   "/approve-reject-service-requests",
   approveRejectServicesSubmissionValidationSchema,
   validator,
-  createStaffControllerData.approveRejectServicesSubmission
+  adminController.approveRejectServicesSubmission
 );
 
+admin_route.post("/map-staff-customer", adminController.mapStaffCustomer);
+
+// STAFF SPECIFIC FUNCTIONALITY
 admin_route.post(
   "/create-staff",
   createUserValidationSchema,
@@ -45,11 +54,27 @@ admin_route.get("/get-all-staff", createStaffControllerData.getAllStaff);
 
 admin_route.get("/get-all-customer", createStaffControllerData.getAllCustomer);
 
-admin_route.post("/map-staff-customer", createStaffControllerData.mapStaffCustomer);
+
+// REVIEWER SPECIFIC FUNCTIONALITY
+admin_route.post(
+  "/create-reviewer",
+  createUserValidationSchema,
+  validator,
+  createReviewerController.createReviewer
+);
+
+admin_route.post(
+  "/edit-reviewer",
+  updateReviewerUserValidationSchema,
+  validator,
+  createReviewerController.updateReviewer
+);
+
+admin_route.get("/get-all-reviewer", createReviewerController.getAllReviewer);
 
 admin_route.post(
   "/search-report",
-  createStaffControllerData.searchReports
+  adminController.searchReports
 );
 
 admin_route.post(
