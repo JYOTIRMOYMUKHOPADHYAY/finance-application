@@ -28,13 +28,17 @@ CREATE TABLE userData (
     userType_id INT NOT NULL,
     isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
     isActive BOOLEAN NOT NULL DEFAULT TRUE,
+    qualification VARCHAR(555),
+    experience VARCHAR(555),
+    service_id INT,
     created_by INT,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_by INT,
     updated_at TIMESTAMP,
     FOREIGN KEY (userType_id) REFERENCES userTypes(userType_id),
     FOREIGN KEY (created_by) REFERENCES userData(user_id),
-    FOREIGN KEY (updated_by) REFERENCES userData(user_id)
+    FOREIGN KEY (updated_by) REFERENCES userData(user_id),
+    FOREIGN KEY (service_id) REFERENCES services(id)
 );
 CREATE INDEX idx_userdata_userType_id ON userData(userType_id);
 CREATE INDEX idx_userdata_phone_no ON userData(phone_no);

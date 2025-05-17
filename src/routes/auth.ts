@@ -111,10 +111,10 @@ auth_router.post(
 
 auth_router.post("/file-download", genericMasterController.downloadFile);
 
-// ......ApplyJobController[Symbol]...ApplyJobController
-auth_router.get(
-  "/get-carrier-submission",
-  genericMasterController.getCarriersData
-);
+// // ......ApplyJobController[Symbol]...ApplyJobController
+// auth_router.get(
+//   "/get-carrier-submission",
+//   genericMasterController.getCarriersData
+// );
 
 export default auth_router;

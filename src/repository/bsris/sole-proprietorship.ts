@@ -1,10 +1,5 @@
 import sql from "../../config/db";
 
-export enum StatusEnum {
-  APPROVED = "APPROVED",
-  REJECTED = "REJECTED",
-  PENDING = "PENDING",
-}
 
 export interface BRISSoleProprietorship {
   userId: number;
@@ -23,7 +18,7 @@ export default class BRISSoleProprietorshipRepository {
   public async soleProprietorship(data: BRISSoleProprietorship): Promise<any> {
     try {
       return await sql`
-        INSERT INTO BRIS_sole_proprietorship (
+        INSERT INTO  (
             user_id,service_id, sub_service_id, mobileNo, mailId, periodId, message, 
             fileLink
         ) 

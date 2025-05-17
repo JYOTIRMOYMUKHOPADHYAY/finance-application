@@ -24,8 +24,8 @@ export default class UserRepository {
       VALUES (${name}, ${email}, ${hash}, ${salt}, ${phone_no}, ${
         qualification || null
       }, ${experience || null}, ${service_id || null}, ${userType_id}, ${
-        created_by || 1
-      }, NOW(), 1, NOW())
+        created_by || null
+      }, NOW(), null, null)
       RETURNING *`;
     } catch (error) {
       throw error;
