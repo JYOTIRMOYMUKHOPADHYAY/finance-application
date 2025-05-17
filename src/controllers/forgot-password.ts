@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { LoginService } from "../services/login.service";
 import { OtpGenerator } from "../services/otp.service";
 import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "../middleware/responseHandeler";
 import { hashPassword, verifyPassword } from "../utils/utils";
+import { UserService } from "../services/user";
 
-const loginService = new LoginService();
+const userService = new UserService();
 const otpGenerator = new OtpGenerator();
 export class ForgotPasswordController {
   constructor() {} // private otpGenerator = new OtpGenerator()
@@ -24,7 +24,7 @@ export class ForgotPasswordController {
   public async forgotPassword(req: Request, res: Response): Promise<any> {
     try {
       const { phone_no } = req.body;
-      const userData = await loginService.getUser(phone_no);
+      const userData = await userService.getUser(phone_no);
       if (!userData || userData.length == 0) {
         return sendErrorResponse(res, "User not found", null, 200);
       }
@@ -58,7 +58,7 @@ export class ForgotPasswordController {
   public async setForgotPassword(req: Request, res: Response): Promise<any> {
     try {
       const { phone_no, otp, new_password } = req.body;
-      const userData = await loginService.getUser(phone_no);
+      const userData = await userService.getUser(phone_no);
       if (!userData || userData.length == 0) {
         return sendErrorResponse(res, "User not found", null, 200);
       }
@@ -66,7 +66,7 @@ export class ForgotPasswordController {
       if (!verify) return sendErrorResponse(res, "Invalid OTP", null, 200);
       
       const { salt, hash } = hashPassword(new_password);
-      const data = await loginService.updatePassword(phone_no, hash, salt);
+      const data = await userService.updatePassword(phone_no, hash, salt);
       delete data[0].password;
       delete data[0].password_salt;
       return sendSuccessResponse(res, "Password reset successfully", data[0]);

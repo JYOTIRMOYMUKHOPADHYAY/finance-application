@@ -1,5 +1,4 @@
 import sql from "../config/db";
-import applyJob from "./applyJob";
 
 export interface UserType {
   userType_id: number;

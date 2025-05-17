@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
-import { LoginService } from "../services/login.service";
 import { verifyPassword } from "../utils/utils";
 import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "../middleware/responseHandeler";
 import { TokenService } from "../services/token.service";
+import { UserService } from "../services/user";
 
-const loginService = new LoginService();
+// const loginService = new LoginService();
+const userService = new UserService();
 const tokenService = new TokenService();
 export class LoginController {
   constructor() {}
@@ -15,7 +16,7 @@ export class LoginController {
   public async login(req: Request, res: Response): Promise<any> {
     try {
       const { phone_no, password } = req.body;
-      const userData: any[] = await loginService.getUser(phone_no);
+      const userData: any[] = await userService.getUser(phone_no);
       if(!userData) return sendErrorResponse(res, "User not found", null, 200);
       const verify = verifyPassword(
         password,
@@ -44,7 +45,7 @@ export class LoginController {
       const { refreshToken } = req.body;
       const userRefreshTokenDate =
         tokenService.verifyRefreshToken(refreshToken);
-      const userData: any[] = await loginService.getUser(
+      const userData: any[] = await userService.getUser(
         userRefreshTokenDate.phone_no
       );
       delete userData[0].password;

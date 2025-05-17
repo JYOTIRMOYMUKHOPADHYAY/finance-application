@@ -82,11 +82,5 @@ admin_route.post(
   newsUpdatesController.newsUpdatesData
 );
 
-// admin_route.post(
-//   "/map-customer-staff",
-//   updateUserValidationSchema,
-//   validator,
-//   createStaffControllerData.updateStaff
-// );
 
 export default admin_route;

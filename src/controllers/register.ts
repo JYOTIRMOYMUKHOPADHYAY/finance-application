@@ -1,26 +1,24 @@
 import { Request, Response } from "express";
 import { hashPassword } from "../utils/utils";
-import { LoginService } from "../services/login.service";
-import { RegisterService } from "../services/register.service";
 import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "../middleware/responseHandeler";
+import { UserService } from "../services/user";
 
-const loginService = new LoginService();
-const registerService = new RegisterService();
+const userService = new UserService();
 export class RegisterController {
   constructor() {}
 
   public async register(req: Request, res: Response): Promise<void> {
     try {
       const { name, phone_no, email, userType_id } = req.body;
-      const user = await loginService.getUser(phone_no);
+      const user = await userService.getUser(phone_no);
       if (user) {
         return sendErrorResponse(res, "User Already Exists.", null, 200);
       }
       const { salt, hash } = hashPassword(req.body.password);
-      const userData = await registerService.register({
+      const userData = await userService.createUser({
         name,
         email: email ? email : "",
         phone_no: phone_no,

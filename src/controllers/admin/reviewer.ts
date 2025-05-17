@@ -4,21 +4,19 @@ import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "../../middleware/responseHandeler";
-import { RegisterService } from "../../services/register.service";
-import { LoginService } from "../../services/login.service";
 import { hashPassword, sanitizeData } from "../../utils/utils";
 import { USERTYPE_ID } from "../../globalVariable";
 import { StaffUserService } from "../../services/admin/user";
+import { UserService } from "../../services/user";
 
-const registerService = new RegisterService();
-const loginService = new LoginService();
+const userService = new UserService();
 const staffService = new StaffUserService();
 export class CreateReviewerController {
   constructor() {} // private staffService = new StaffUserService()
 
   public async createReviewer(req: Request, res: Response): Promise<void> {
     const adminUser = (req as any).user;
-    const user = await loginService.getUser(req.body.phone_no);
+    const user = await userService.getUser(req.body.phone_no);
     if (user) {
       return sendErrorResponse(
         res,
@@ -29,7 +27,7 @@ export class CreateReviewerController {
     }
     try {
       const { salt, hash } = hashPassword(req.body.password);
-      const userData = await registerService.register({
+      const userData = await userService.createUser({
         name: req.body.name,
         email: req.body?.email ? req.body?.email : "",
         phone_no: req.body.phone_no,
@@ -58,7 +56,7 @@ export class CreateReviewerController {
     const adminUser = (req as any).user;
     const reviewerUser = req.body;
     // break;
-    const userData = await loginService.getUserById(reviewerUser.reviewer_id);
+    const userData = await userService.getUserById(reviewerUser.reviewer_id);
     if (!userData) {
       return sendErrorResponse(res, "No user Found.", null, 200);
     }
