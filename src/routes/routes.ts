@@ -11,6 +11,6 @@ router.use("/auth", auth_router);
 router.use("/services", validateJWT, services_router);
 router.use("/admin", validateJWT, validateAdmin, admin_route);
 router.use("/staff",validateJWT, staff_route);
-router.use("/reviewer", reviewer_router);
+router.use("/reviewer",validateJWT, reviewer_router);
 
 export default router;

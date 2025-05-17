@@ -13,7 +13,8 @@ export type StatusType = {
     ACCEPTED : string,
     SUBMITTED : string,
     COMPLETED : string,
-    REJECTED : string
+    REJECTED : string,
+    VERIFIED : string
   };
 // CREATE TYPE status_enum AS ENUM ('PENDING', 'ASSIGNED', 'ACCEPTED', 'SUBMITTED', 'COMPLETED', 'REJECTED');
 export const STATUS : StatusType = {
@@ -22,5 +23,6 @@ export const STATUS : StatusType = {
     ACCEPTED : 'ACCEPTED',
     SUBMITTED : 'SUBMITTED',
     COMPLETED : 'COMPLETED',
-    REJECTED : 'REJECTED'
+    REJECTED : 'REJECTED',
+    VERIFIED : 'VERIFIED'
 }
