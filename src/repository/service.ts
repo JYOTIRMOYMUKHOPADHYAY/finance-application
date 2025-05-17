@@ -9,14 +9,14 @@ export default class ServicesRepository {
    * @returns A promise that resolves to an array of services.
    * @throws An error if the database query fails.
    */
-  public async getAllServices(): Promise<any> {
-    try {
-      return await sql`
-       SELECT * FROM services`;
-    } catch (error) {
-      throw error
-    }
-  }
+  // public async getAllServices(): Promise<any> {
+  //   try {
+  //     return await sql`
+  //      SELECT * FROM services`;
+  //   } catch (error) {
+  //     throw error
+  //   }
+  // }
 
   /**
    * Fetches all sub-services associated with a given service ID.

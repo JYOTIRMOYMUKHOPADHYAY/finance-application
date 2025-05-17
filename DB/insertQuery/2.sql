@@ -160,3 +160,15 @@ INSERT INTO ComplianceCalenderData (
 (56, 3, 11, 'GSTR 1 (Monthly) for May 2025'),
 (57, 3, 10, 'Professional Tax (PT) on Salaries for May 2025. Professional Tax Due Date Varies from State to State. Kindly Contact eztax.in for Expert help.'),
 (58, 3, 7, 'TDS / TCS Payment for May 2025');
+
+
+INSERT INTO externalLinks (name, url, isDeleted, created_at)
+VALUES 
+('GST Login Portal', 'https://www.gst.gov.in/', FALSE, now()),
+('Income tax portal', 'https://eportal.incometax.gov.in/iec/foservices/#/login', FALSE, now()),
+('MCA', 'https://www.mca.gov.in/mcafoportal/login.do', FALSE, now()),
+('PF', 'https://unifiedportal-emp.epfindia.gov.in/epfo/', FALSE, now()),
+('ESI', 'https://www.esic.gov.in/', FALSE, now()),
+('HSN Code Finder', 'https://services.gst.gov.in/services/searchhsnsac', FALSE, now());
+
+SELECT * FROM externalLinks

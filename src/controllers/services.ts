@@ -9,20 +9,20 @@ const services = new ServicesDataService();
 export class ServicesController {
   constructor() {}
 
-  public async getAllServices(req: Request, res: Response): Promise<any> {
-    try {
-      const data = await services.getAllServices();
-      return sendSuccessResponse(
-        res,
-        "All Services Fetched successfully",
-        data
-      );
-    } catch (error) {
-      console.log("=====getAllServices====");
-      console.log(error);
-      return sendErrorResponse(res, "Invalid data", null, 200);
-    }
-  }
+  // public async getAllServices(req: Request, res: Response): Promise<any> {
+  //   try {
+  //     const data = await services.getAllServices();
+  //     return sendSuccessResponse(
+  //       res,
+  //       "All Services Fetched successfully",
+  //       data
+  //     );
+  //   } catch (error) {
+  //     console.log("=====getAllServices====");
+  //     console.log(error);
+  //     return sendErrorResponse(res, "Invalid data", null, 200);
+  //   }
+  // }
 
   public async getSubServices(req: Request, res: Response): Promise<any> {
     try {

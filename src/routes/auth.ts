@@ -15,6 +15,7 @@ import { GetInTouchController } from "../controllers/getInTouch";
 import { upload } from "../middleware/fileValidationCheck";
 import { setForgotPasswordValidationSchema } from "../middleware/schema/set_forgot-password";
 import { GenericMasterController } from "../controllers/genericMaster";
+import { GeneralController } from "../controllers/general";
 
 const auth_router = Router();
 const loginController = new LoginController();
@@ -24,17 +25,64 @@ const services = new ServicesController();
 const applyJobController = new ApplyJobController();
 const getInTouchController = new GetInTouchController();
 const genericMasterController = new GenericMasterController();
-
+const generalController = new GeneralController();
 // User Types
-auth_router.get("/user-types", loginController.getUserTypes);
+auth_router.get("/user-types", generalController.getUserTypes);
 
-// Register
-auth_router.post(
-  "/register",
-  registerValidationSchema,
-  validator,
-  registerController.register
+auth_router.get(
+  "/general-links",
+  generalController.getLinksData
 );
+
+auth_router.get(
+  "/news-updates",
+  generalController.newsUpdatesData
+);
+
+// Services
+auth_router.get("/services", generalController.getAllServices);
+
+// Sub Services
+auth_router.post(
+  "/sub-services",
+  subServiceValidationSchema,
+  generalController.getSubServices
+);
+
+// Generic dropdown
+auth_router.get(
+  "/period-dropdown",
+  generalController.getPeriodIdData
+);
+
+auth_router.get(
+  "/mounth-data",
+  generalController.getMounthData
+);
+
+auth_router.post(
+  "/compliance-data",
+  generalController.getComplianceData
+);
+
+//Apply for this job
+auth_router.post(
+  "/apply-for-job",
+  upload.single("file"),
+  // applyJobValidationSchema,
+  // validator,
+  generalController.applyForJob
+);
+// get in touch
+auth_router.post(
+  "/get-in-touch",
+  getInTouchValidationSchema,
+  validator,
+  generalController.getInTouch
+);
+
+
+
 
 // Login
 auth_router.post(
@@ -67,67 +115,41 @@ auth_router.post(
   forgotPassword.setForgotPassword
 );
 
-// Services
-auth_router.get("/services", services.getAllServices);
 
-// Sub Services
-auth_router.post(
-  "/sub-services",
-  subServiceValidationSchema,
-  services.getSubServices
-);
 
-//Apply for this job
-auth_router.post(
-  "/apply-for-job",
-  upload.single("file"),
-  // applyJobValidationSchema,
-  // validator,
-  applyJobController.applyForJob
-);
 
-// get in touch
-auth_router.post(
-  "/get-in-touch",
-  getInTouchValidationSchema,
-  validator,
-  getInTouchController.getInTouch
-);
 
-// Generic dropdown
-auth_router.get(
-  "/period-dropdown",
-  genericMasterController.getDropdownData
-);
+
+
+
+
+
+
+
+
+
+
 
 auth_router.post(
   "/file-download",
   genericMasterController.downloadFile
 );
 
-auth_router.get(
-  "/mounth-data",
-  genericMasterController.getMounthData
-);
-
-auth_router.post(
-  "/compliance-data",
-  genericMasterController.getComplianceData
-);
-
-auth_router.get(
-  "/general-links",
-  genericMasterController.getLinksData
-);
-
-auth_router.get(
-  "/news-updates",
-  genericMasterController.newsUpdatesData
-);
-
+// ......ApplyJobController[Symbol]...ApplyJobController
 auth_router.get(
   "/get-carrier-submission",
   genericMasterController.getCarriersData
 );
+
+// Register
+auth_router.post(
+  "/register",
+  registerValidationSchema,
+  validator,
+  registerController.register
+);
+
+
+
 
 export default auth_router;

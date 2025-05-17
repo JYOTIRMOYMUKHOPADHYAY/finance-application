@@ -142,7 +142,7 @@ CREATE TABLE getInTouch (
     updated_at TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES userData(user_id),
     FOREIGN KEY (updated_by) REFERENCES userData(user_id),
-    FOREIGN KEY (required_service) REFERENCES subservices(id) ON DELETE CASCADE
+    FOREIGN KEY (required_service) REFERENCES services(id) ON DELETE CASCADE
 );
 CREATE INDEX idx_getInTouch_required_service ON getInTouch(required_service);
 

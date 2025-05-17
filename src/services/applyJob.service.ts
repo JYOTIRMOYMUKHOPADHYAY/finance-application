@@ -5,7 +5,7 @@ export class ApplyJobService{
         private applyJob = new ApplyJobRepository()
     ) {}
 
-    public async applyForJob(data:any): Promise<any> {
-        return await this.applyJob.applyForJob(data);
-    }
+    // public async applyForJob(data:any): Promise<any> {
+    //     return await this.applyJob.applyForJob(data);
+    // }
 }

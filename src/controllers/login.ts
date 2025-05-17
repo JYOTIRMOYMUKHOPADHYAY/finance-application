@@ -12,15 +12,6 @@ const tokenService = new TokenService();
 export class LoginController {
   constructor() {}
 
-  public async getUserTypes(req: Request, res: Response): Promise<void> {
-    const userTypes = await loginService.getUserTypes();
-    res.status(200).json({
-      success: true,
-      message: "Success",
-      data: userTypes,
-    });
-  }
-
   public async login(req: Request, res: Response): Promise<any> {
     try {
       const { phone_no, password } = req.body;
