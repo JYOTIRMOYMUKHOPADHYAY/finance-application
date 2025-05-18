@@ -1,12 +1,13 @@
-import BRISSoleProprietorshipRepository from "../../repository/bsris/sole-proprietorship";
-import { AWSService } from "../AWS.service";
-export class BusinessRegistrationIncorporationService {
+import CustomerRepository from "../repository/customer";
+import { AWSService } from "./AWS.service";
+
+export class CustomerService {
   constructor(
     private awsService = new AWSService(),
-    private soleProprietorshipRepo = new BRISSoleProprietorshipRepository()
+    private customerRepo = new CustomerRepository()
   ) {}
 
-  public async soleProprietorship(
+  public async serviceSubmission(
     files: Record<string, Express.Multer.File[]>,
     fieldData: any,
     userData: any
@@ -23,7 +24,7 @@ export class BusinessRegistrationIncorporationService {
         message: fieldData?.message,
         fileLink: uploadData.zipFile,
       };
-      return await this.soleProprietorshipRepo.soleProprietorship(
+      return await this.customerRepo.serviceSubmission(
         registrationDetails
       );
     } catch (error) {
@@ -33,6 +34,15 @@ export class BusinessRegistrationIncorporationService {
     }
   }
 
+
+  public async getServicesSubmisson(userData: any): Promise<any> {
+    try {
+      const data = await this.customerRepo.getServicesSubmisson(userData);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   private async uploadMultipleFilesToS3(
     files: Record<string, Express.Multer.File[]>,

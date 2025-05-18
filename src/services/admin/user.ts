@@ -25,25 +25,26 @@ export class StaffUserService {
     try {
       const data = await this.staffRepo.getAllServicesSubmission();
       const statusData = this.getFullStatusCounts(data);
-      return {data,statusData};
+      return { data, statusData };
     } catch (error) {
       throw error;
     }
   }
 
-
-  private getFullStatusCounts(data : any) {
+  private getFullStatusCounts(data: any) {
     const newStatus = { ...STATUS } as Record<string, string>;
     delete newStatus.PENDING;
-    const counts = Object.fromEntries(Object.values(newStatus).map(status => [status, 0]));
-  
-    data.forEach((item:any) => {
+    const counts = Object.fromEntries(
+      Object.values(newStatus).map((status) => [status, 0])
+    );
+
+    data.forEach((item: any) => {
       if (counts.hasOwnProperty(item.status)) {
         counts[item.status]++;
       }
     });
-  
-    return Object.entries(counts).map(([status, count]) => ({ status, count }));;
+
+    return Object.entries(counts).map(([status, count]) => ({ status, count }));
   }
   public async getNewServicesSubmission(): Promise<any> {
     try {
@@ -70,14 +71,7 @@ export class StaffUserService {
     }
   }
 
-  public async getServicesSubmisson(userData: any): Promise<any> {
-    try {
-      const data = await this.staffRepo.getServicesSubmisson(userData);
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  }
+
 
   public async mapStaffCustomer(
     customerId: number,
@@ -99,7 +93,6 @@ export class StaffUserService {
       throw error;
     }
   }
-
 
   public async searchReports(
     status: string,

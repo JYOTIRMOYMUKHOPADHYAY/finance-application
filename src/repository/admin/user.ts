@@ -86,44 +86,13 @@ export default class UserRepository {
         LEFT JOIN userData staff ON staff.user_id = msc.staff_id
         WHERE bsp.status <> 'PENDING';
       `;
-  
+
       return data;
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
-  
-  
-
-  //   public async getNewServicesSubmission(
-  //     status: string = STATUS.PENDING
-  //   ): Promise<any> {
-  //     try {
-  //       return await sql`
-
-  //       SELECT
-  //     bsp.*,
-  //     s.name AS service_name,
-  //     s.id AS service_id,
-  //     ss.name AS sub_service_name,
-  //     ss.id AS sub_service_id,
-  //     u.name AS user_name,
-  //     u.email AS user_email,
-  //     u.phone_no AS user_phone
-  // FROM bris_sole_proprietorship bsp
-  // JOIN services s ON s.id = bsp.service_id
-  // JOIN subservices ss ON ss.id = bsp.sub_service_id
-  // JOIN userData u ON u.user_id = bsp.user_id
-  // WHERE bsp.status = ${status}
-  //       ORDER BY bsp.created_date DESC;
-
-  // `;
-  //     } catch (error) {
-  //       console.log(error);
-  //       throw error;
-  //     }
-  //   }
 
   public async getNewServicesSubmission(
     status: string = STATUS.PENDING
@@ -195,31 +164,7 @@ RETURNING *;
     }
   }
 
-  public async getServicesSubmisson(user_id: number): Promise<any> {
-    try {
-      return await sql`
-      SELECT
-    bsp.*,
-    s.name AS service_name,
-    s.id AS service_id,
-    ss.name AS sub_service_name,
-    ss.id AS sub_service_id,
-    u.name AS user_name,
-    u.email AS user_email,
-    u.phone_no AS user_phone
-FROM bris_sole_proprietorship bsp
-JOIN services s ON s.id = bsp.service_id
-JOIN subservices ss ON ss.id = bsp.sub_service_id
-JOIN userData u ON u.user_id = bsp.user_id
-WHERE bsp.user_id = ${user_id} 
-      ORDER BY bsp.created_date DESC;
 
-`;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
 
   public async mapStaffUser(
     customer_id: number,
@@ -262,24 +207,26 @@ WHERE bsp.user_id = ${user_id}
     try {
       const conditions: string[] = [];
       const params: any[] = [];
-  
+
       if (status) {
         conditions.push(`bsp.status = $${params.length + 1}`);
         params.push(status);
       }
-  
+
       if (service_id) {
         conditions.push(`bsp.service_id = $${params.length + 1}`);
         params.push(service_id);
       }
-  
+
       if (staff_id) {
         conditions.push(`msc.staff_id = $${params.length + 1}`);
         params.push(staff_id);
       }
-  
-      const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
-  
+
+      const whereClause = conditions.length
+        ? `WHERE ${conditions.join(" AND ")}`
+        : "";
+
       const query = `
         SELECT 
           bsp.*, 
@@ -300,20 +247,11 @@ WHERE bsp.user_id = ${user_id}
           LEFT JOIN userData staff ON staff.user_id = msc.staff_id -- Join to get staff name
         ${whereClause};
       `;
-  
+
       return await sql.unsafe(query, params);
     } catch (error) {
       console.error("Error fetching reports:", error);
       throw error;
     }
   }
-  
-  
 }
-
-
-
-
-
-
-
