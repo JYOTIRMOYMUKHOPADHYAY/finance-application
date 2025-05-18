@@ -181,8 +181,8 @@ RETURNING *;
       `;
 
       await sql`
-        INSERT INTO assignedStaffToCustomerData (staff_id, sole_proprietorship_id, updated_by,updated_date)  
-        VALUES (${staff_id}, ${requestId}, ${admin_id}, CURRENT_TIMESTAMP)
+        INSERT INTO assignedStaffToCustomerData (staff_id, service_request_id, updated_by,updated_at)  
+        VALUES (${staff_id}, ${requestId}, ${admin_id}, now())
         RETURNING *;
       `;
       return await sql`

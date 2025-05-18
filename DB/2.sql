@@ -227,7 +227,7 @@ CREATE TABLE staffCustomerMapping (
     FOREIGN KEY (customer_id) REFERENCES userData(user_id) ON DELETE CASCADE,
     FOREIGN KEY (staff_id) REFERENCES userData(user_id) ON DELETE CASCADE,
     FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
-    UNIQUE (customer_id, service_id, id)
+    UNIQUE (customer_id, service_id)
 );
 CREATE INDEX idx_staffCustomerMapping_customer_id ON staffCustomerMapping(customer_id);
 CREATE INDEX idx_staffCustomerMapping_staff_id ON staffCustomerMapping(staff_id);
