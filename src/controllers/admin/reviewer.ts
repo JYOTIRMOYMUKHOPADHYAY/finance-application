@@ -6,11 +6,11 @@ import {
 } from "../../middleware/responseHandeler";
 import { hashPassword, sanitizeData } from "../../utils/utils";
 import { USERTYPE_ID } from "../../globalVariable";
-import { StaffUserService } from "../../services/admin/user";
+import { AdminService } from "../../services/admin/admin";
 import { UserService } from "../../services/user";
 
 const userService = new UserService();
-const staffService = new StaffUserService();
+const staffService = new AdminService();
 export class CreateReviewerController {
   constructor() {} // private staffService = new StaffUserService()
 

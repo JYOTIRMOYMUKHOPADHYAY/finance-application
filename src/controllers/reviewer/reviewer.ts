@@ -10,7 +10,6 @@ const reviewerService = new ReviewerService();
 export class ReviewerController {
   constructor() {} // private staffService = new StaffUserService()
 
-
   public async approveRejectServicesSubmission(
     req: Request,
     res: Response

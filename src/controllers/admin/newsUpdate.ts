@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { sendErrorResponse } from "../../middleware/responseHandeler";
-import { StaffUserService } from "../../services/admin/user";
 import { UpdateNewsService } from "../../services/admin/newsUpdate";
 
 const newsService = new UpdateNewsService();

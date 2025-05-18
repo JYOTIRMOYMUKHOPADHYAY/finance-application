@@ -10,23 +10,23 @@ const staffService = new StaffService();
 export class StaffController {
   constructor() {} // private staffService = new StaffUserService()
 
-  public async getAllStaffDashboard(
+  public async getAssignedUserServiceData(
     req: Request,
     res: Response
   ): Promise<void> {
     try {
       const user = (req as any).user;
-      const data = await staffService.getAllStaffDashboard(user.user_id);
+      const data = await staffService.getAssignedUserServiceData(user.user_id);
       return sendSuccessResponse(res, "Success", data, 200);
     } catch (error: any) {
       return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
-  public async searchStaffReport(req: Request, res: Response): Promise<void> {
+  public async searchUserServiceReport(req: Request, res: Response): Promise<void> {
     try {
       const user = (req as any).user;
-      const data = await staffService.searchStaffReport({
+      const data = await staffService.searchUserServiceReport({
         staff_id: user.user_id,
         status: req.body.status == "NONE" ? null : req.body.status,
         service_id: req.body.service_id == "NONE" ? null : req.body.service_id,

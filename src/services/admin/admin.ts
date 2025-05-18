@@ -2,7 +2,7 @@ import { STATUS } from "../../globalVariable";
 import UserRepository from "../../repository/admin/user";
 import { groupApplicationsByService } from "../../utils/utils";
 
-export class StaffUserService {
+export class AdminService {
   constructor(private staffRepo = new UserRepository()) {}
 
   public async updateStaff(staffUser: any, adminUser: any): Promise<any> {

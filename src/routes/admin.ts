@@ -40,19 +40,19 @@ admin_route.post(
   "/create-staff",
   createUserValidationSchema,
   validator,
-  createStaffControllerData.createStaff
+  adminController.createStaff
 );
 
 admin_route.post(
   "/edit-staff",
   updateUserValidationSchema,
   validator,
-  createStaffControllerData.updateStaff
+  adminController.updateStaff
 );
 
-admin_route.get("/get-all-staff", createStaffControllerData.getAllStaff);
+admin_route.get("/get-all-staff", adminController.getAllStaff);
 
-admin_route.get("/get-all-customer", createStaffControllerData.getAllCustomer);
+admin_route.get("/get-all-customer", adminController.getAllCustomer);
 
 
 // REVIEWER SPECIFIC FUNCTIONALITY

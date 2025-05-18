@@ -16,17 +16,15 @@ interface applyJob {
 export default class StaffRepository {
   constructor() {}
 
-  /**
-   * Get user details by mobile number.
-   */
-  public async getAllStaffDashboard(data: any): Promise<any> {
+
+  public async getAssignedUserServiceData(data: any): Promise<any> {
     const query = `
    WITH customer_service_mapping AS (
     SELECT 
         customer_id, 
         service_id 
     FROM 
-        mapStaffCustomer 
+        staffCustomerMapping 
     WHERE 
         staff_id = $1 -- Replace with actual staff_id
 )
@@ -41,7 +39,7 @@ SELECT DISTINCT ON (bsp.id)
 FROM
     customer_service_mapping csm
 JOIN
-    BRIS_sole_proprietorship bsp 
+    serviceRequest bsp 
     ON csm.customer_id = bsp.user_id 
     AND csm.service_id = bsp.service_id  -- Ensures only relevant service data
 LEFT JOIN
@@ -63,7 +61,7 @@ WHERE
     }
   }
 
-  public async searchStaffReport(data: {
+  public async searchUserServiceReport(data: {
     staff_id: number;
     status?: string;
     service_id?: number;
@@ -95,7 +93,7 @@ WHERE
             customer_id, 
             service_id 
         FROM 
-            mapStaffCustomer 
+            staffCustomerMapping 
         WHERE 
             staff_id = $1
       )
@@ -110,7 +108,7 @@ WHERE
       FROM
           customer_service_mapping csm
       JOIN
-          BRIS_sole_proprietorship bsp 
+          serviceRequest bsp 
           ON csm.customer_id = bsp.user_id 
           AND csm.service_id = bsp.service_id
       LEFT JOIN
@@ -138,7 +136,7 @@ WITH customer_service_mapping AS (
         customer_id, 
         service_id 
     FROM 
-        mapStaffCustomer 
+        staffCustomerMapping 
     WHERE 
         staff_id = $1 -- Replace with actual staff_id
 )
@@ -153,7 +151,7 @@ SELECT DISTINCT ON (bsp.id)
 FROM
     customer_service_mapping csm
 JOIN
-    BRIS_sole_proprietorship bsp 
+    serviceRequest bsp 
     ON csm.customer_id = bsp.user_id 
     AND csm.service_id = bsp.service_id  -- Ensures only relevant service data
 LEFT JOIN
@@ -187,7 +185,7 @@ WHERE
         ? STATUS.ACCEPTED
         : STATUS.PENDING;
       return await sql`
-UPDATE bris_sole_proprietorship
+UPDATE serviceRequest
 SET status = ${status}::status_enum 
 WHERE id = ${requestId}
 RETURNING *;
@@ -205,7 +203,7 @@ RETURNING *;
   ): Promise<any> {
     try {
       return await sql`
-SELECT * FROM mapStaffCustomer WHERE staff_id = ${staff_id} AND customer_id = ${user_id};
+SELECT * FROM staffCustomerMapping WHERE staff_id = ${staff_id} AND customer_id = ${user_id};
 `;
     } catch (error) {
       console.log(error);
@@ -216,7 +214,7 @@ SELECT * FROM mapStaffCustomer WHERE staff_id = ${staff_id} AND customer_id = ${
   public async getRequestDetails(reqId: number): Promise<any> {
     try {
       return await sql`
-SELECT * FROM bris_sole_proprietorship WHERE id = ${reqId};
+SELECT * FROM serviceRequest WHERE id = ${reqId};
 `;
     } catch (error) {
       console.log(error);
@@ -230,7 +228,7 @@ SELECT * FROM bris_sole_proprietorship WHERE id = ${reqId};
   ): Promise<any> {
     try {
       return await sql`
-DELETE FROM mapStaffCustomer
+DELETE FROM staffCustomerMapping
 WHERE customer_id = ${customer_id}
 AND service_id = ${service_id}
 `;

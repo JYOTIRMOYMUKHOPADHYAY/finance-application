@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { StaffController } from "../controllers/staff/staff";
 import { CreateStaffController } from "../controllers/admin/user";
 import { ReviewerController } from "../controllers/reviewer/reviewer";
 
 const reviewer_router = Router();
-const stafff = new StaffController();
+
 const adminController = new CreateStaffController();
 const reviewerController = new ReviewerController();
 reviewer_router.get("/reviewer-all-dashboard", adminController.getAllServicesSubmission);

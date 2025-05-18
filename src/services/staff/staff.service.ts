@@ -2,17 +2,17 @@ import { STATUS } from "../../globalVariable";
 import StaffRepository from "../../repository/staff/staff";
 
 export class StaffService {
-  constructor(private servicesRepo = new StaffRepository()) {}
+  constructor(private staffServicesRepo = new StaffRepository()) {}
 
-  public async getAllStaffDashboard(data: any): Promise<any> {
-    return await this.servicesRepo.getAllStaffDashboard(data);
+  public async getAssignedUserServiceData(data: any): Promise<any> {
+    return await this.staffServicesRepo.getAssignedUserServiceData(data);
   }
 
-  public async searchStaffReport(data: any): Promise<any> {
-    return await this.servicesRepo.searchStaffReport(data);
+  public async searchUserServiceReport(data: any): Promise<any> {
+    return await this.staffServicesRepo.searchUserServiceReport(data);
   }
   public async getStaffDashboard(data: any): Promise<any> {
-    return await this.servicesRepo.getStaffDashboard(data);
+    return await this.staffServicesRepo.getStaffDashboard(data);
   }
 
   public async approveRejectServicesSubmission(
@@ -21,8 +21,8 @@ export class StaffService {
     requestId: number,
     isSubmitted?: boolean
   ): Promise<any> {
-    const reqDetails = await this.servicesRepo.getRequestDetails(requestId);
-    const isDataExists = await this.servicesRepo.checkUserStaffMapping(
+    const reqDetails = await this.staffServicesRepo.getRequestDetails(requestId);
+    const isDataExists = await this.staffServicesRepo.checkUserStaffMapping(
       reqDetails[0].user_id,
       stafUser.user_id
     );
@@ -37,7 +37,7 @@ export class StaffService {
       throw new Error("Please accept the request first");
     }
     if (!isSubmitted) {
-      const data = await this.servicesRepo.approveRejectServicesSubmission(
+      const data = await this.staffServicesRepo.approveRejectServicesSubmission(
         isAccepted,
         requestId
       );
@@ -51,7 +51,7 @@ export class StaffService {
       return data;
     }
     if (isSubmitted) {
-      const data = await this.servicesRepo.approveRejectServicesSubmission(
+      const data = await this.staffServicesRepo.approveRejectServicesSubmission(
         isAccepted,
         requestId,
         isSubmitted

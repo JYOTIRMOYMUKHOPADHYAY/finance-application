@@ -46,8 +46,8 @@ export default class UserRepository {
       created_at,
       updated_by,
       updated_at,
-      "isDeleted",
-      "isActive",
+      isDeleted,
+      isActive,
       qualification,
       experience,
       service_id
@@ -76,11 +76,11 @@ export default class UserRepository {
           COALESCE(CAST(msc.staff_id AS TEXT), 'NA') AS staff_id, -- Ensure it's text for 'NA'
           msc.created_date AS staff_mapping_created_date,
           COALESCE(staff.name, 'NA') AS staff_name
-        FROM bris_sole_proprietorship bsp
+        FROM serviceRequest bsp
         JOIN services s ON s.id = bsp.service_id
         JOIN subservices ss ON ss.id = bsp.sub_service_id
         JOIN userData u ON u.user_id = bsp.user_id
-        LEFT JOIN mapstaffcustomer msc 
+        LEFT JOIN staffCustomerMapping msc 
           ON bsp.user_id = msc.customer_id
           AND bsp.service_id = msc.service_id
         LEFT JOIN userData staff ON staff.user_id = msc.staff_id
@@ -111,12 +111,12 @@ export default class UserRepository {
         COALESCE(CAST(msc.staff_id AS TEXT), 'NA') AS staff_id,  -- If a match is found, this will have a value; otherwise, NULL
         msc.created_date AS staff_mapping_created_date,
         COALESCE(staff.name, 'NA') AS staff_name -- Get staff name
-      FROM bris_sole_proprietorship bsp
+      FROM serviceRequest bsp
       JOIN services s ON s.id = bsp.service_id
       JOIN subservices ss ON ss.id = bsp.sub_service_id
       JOIN userData u ON u.user_id = bsp.user_id
      
-      LEFT JOIN mapstaffcustomer msc 
+      LEFT JOIN staffCustomerMapping msc 
         ON bsp.user_id = msc.customer_id  -- Ensures correct user
         AND bsp.service_id = msc.service_id  -- Ensures correct service match
         LEFT JOIN userData staff ON staff.user_id = msc.staff_id -- Join to get staff name
@@ -133,15 +133,13 @@ export default class UserRepository {
     try {
       return await sql`
 
-      SELECT * from mapstaffcustomer where customer_id = ${customer_id}
+      SELECT * from staffCustomerMapping where customer_id = ${customer_id}
 `;
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
-  // JOIN mapstaffcustomer msc ON bsp.user_id = msc.customer_id
-
   public async approveRejectServicesSubmission(
     isApproved: boolean | string,
     requestId: number
@@ -152,7 +150,7 @@ export default class UserRepository {
           ? STATUS.COMPLETED
           : STATUS.REJECTED;
       return await sql`
-UPDATE bris_sole_proprietorship
+UPDATE serviceRequest
 SET status = ${status}::status_enum 
 WHERE id = ${requestId}
 RETURNING *;
@@ -175,7 +173,7 @@ RETURNING *;
   ): Promise<any> {
     try {
       await sql`
-        INSERT INTO mapStaffCustomer (customer_id, staff_id, service_id)  
+        INSERT INTO staffCustomerMapping (customer_id, staff_id, service_id)  
         VALUES (${customer_id}, ${staff_id}, ${service_id})
         ON CONFLICT (customer_id, service_id)  
         DO UPDATE SET staff_id = EXCLUDED.staff_id, created_date = CURRENT_TIMESTAMP
@@ -183,12 +181,12 @@ RETURNING *;
       `;
 
       await sql`
-        INSERT INTO assigned_staff_service_data (staff_id, sole_proprietorship_id, updated_by,updated_date)  
+        INSERT INTO assignedStaffToCustomerData (staff_id, sole_proprietorship_id, updated_by,updated_date)  
         VALUES (${staff_id}, ${requestId}, ${admin_id}, CURRENT_TIMESTAMP)
         RETURNING *;
       `;
       return await sql`
-        UPDATE bris_sole_proprietorship 
+        UPDATE serviceRequest 
         SET status = 'ASSIGNED' 
         WHERE id = ${requestId}
                 RETURNING *;
@@ -237,11 +235,11 @@ RETURNING *;
           msc.staff_id,
           msc.created_date AS staff_mapping_created_date,
           staff.name AS staff_name -- Get staff name
-        FROM bris_sole_proprietorship bsp
+        FROM serviceRequest bsp
         JOIN services s ON s.id = bsp.service_id
         JOIN subservices ss ON ss.id = bsp.sub_service_id
         JOIN userData u ON u.user_id = bsp.user_id
-        LEFT JOIN mapstaffcustomer msc 
+        LEFT JOIN staffCustomerMapping msc 
           ON bsp.user_id = msc.customer_id 
           AND bsp.service_id = msc.service_id
           LEFT JOIN userData staff ON staff.user_id = msc.staff_id -- Join to get staff name

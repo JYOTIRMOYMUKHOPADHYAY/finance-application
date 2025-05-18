@@ -6,7 +6,7 @@ export default class Repository {
   public async getRequestDetails(reqId: number): Promise<any> {
     try {
       return await sql`
-SELECT * FROM bris_sole_proprietorship WHERE id = ${reqId};
+SELECT * FROM serviceRequest WHERE id = ${reqId};
 `;
     } catch (error) {
       console.log(error);
@@ -14,16 +14,15 @@ SELECT * FROM bris_sole_proprietorship WHERE id = ${reqId};
     }
   }
 
-
   public async approveRejectServicesSubmission(
     requestId: number,
-    reviewerUser:any,
+    reviewerUser: any,
     isSubmitted?: boolean
   ): Promise<any> {
     try {
       const status = isSubmitted ? STATUS.VERIFIED : STATUS.REJECTED;
       return await sql`
-UPDATE bris_sole_proprietorship
+UPDATE serviceRequest
 SET status = ${status}::status_enum,
     updated_by = ${reviewerUser.user_id}
 WHERE id = ${requestId}
@@ -35,5 +34,4 @@ RETURNING *;
       throw error;
     }
   }
-
 }
