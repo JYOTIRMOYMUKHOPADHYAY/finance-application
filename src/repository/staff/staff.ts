@@ -16,12 +16,19 @@ interface applyJob {
 export default class StaffRepository {
   constructor() {}
 
-  /**
-   * Get user details by mobile number.
-   */
-  public async getAllStaffDashboard(data: any): Promise<any> {
+
+  public async getAssignedUserServiceData(data: any): Promise<any> {
     const query = `
-    SELECT
+   WITH customer_service_mapping AS (
+    SELECT 
+        customer_id, 
+        service_id 
+    FROM 
+        staffCustomerMapping 
+    WHERE 
+        staff_id = $1 -- Replace with actual staff_id
+)
+SELECT DISTINCT ON (bsp.id)
     bsp.*,
     s.name AS service_name,
     ss.name AS sub_service_name,
@@ -30,17 +37,19 @@ export default class StaffRepository {
     u.email AS user_email,
     u.phone_no AS user_phone
 FROM
-    mapStaffCustomer msc
-LEFT JOIN
-    BRIS_sole_proprietorship bsp ON msc.customer_id = bsp.user_id
+    customer_service_mapping csm
+JOIN
+    serviceRequest bsp 
+    ON csm.customer_id = bsp.user_id 
+    AND csm.service_id = bsp.service_id  -- Ensures only relevant service data
 LEFT JOIN
     services s ON bsp.service_id = s.id
 LEFT JOIN
     subservices ss ON bsp.sub_service_id = ss.id
 LEFT JOIN 
-    userData u ON u.user_id = bsp.user_id  -- Ensure every user is fetched
+    userData u ON u.user_id = bsp.user_id
 WHERE
-    msc.staff_id = $1;
+    bsp.status Not IN ('PENDING', 'ASSIGNED', 'ACCEPTED');
     `;
 
     try {
@@ -52,9 +61,86 @@ WHERE
     }
   }
 
+  public async searchUserServiceReport(data: {
+    staff_id: number;
+    status?: string;
+    service_id?: number;
+  }): Promise<any> {
+    const conditions: string[] = [];
+    const params: any[] = [data.staff_id]; // $1 is always staff_id
+
+    // Dynamic conditions
+    if (data.status) {
+      conditions.push(`bsp.status = $${params.length + 1}`);
+      params.push(data.status);
+    }
+
+    if (data.service_id) {
+      conditions.push(`bsp.service_id = $${params.length + 1}`);
+      params.push(data.service_id);
+    }
+
+    // Always exclude 'PENDING' and 'ASSIGNED'
+    conditions.push(`bsp.status NOT IN ('PENDING', 'ASSIGNED')`);
+
+    const whereClause = conditions.length
+      ? `WHERE ${conditions.join(" AND ")}`
+      : "";
+
+    const query = `
+      WITH customer_service_mapping AS (
+        SELECT 
+            customer_id, 
+            service_id 
+        FROM 
+            staffCustomerMapping 
+        WHERE 
+            staff_id = $1
+      )
+      SELECT DISTINCT ON (bsp.id)
+          bsp.*,
+          s.name AS service_name,
+          ss.name AS sub_service_name,
+          ss.id AS sub_service_id,
+          u.name AS user_name,
+          u.email AS user_email,
+          u.phone_no AS user_phone
+      FROM
+          customer_service_mapping csm
+      JOIN
+          serviceRequest bsp 
+          ON csm.customer_id = bsp.user_id 
+          AND csm.service_id = bsp.service_id
+      LEFT JOIN
+          services s ON bsp.service_id = s.id
+      LEFT JOIN
+          subservices ss ON bsp.sub_service_id = ss.id
+      LEFT JOIN 
+          userData u ON u.user_id = bsp.user_id
+      ${whereClause};
+    `;
+
+    try {
+      const result = await sql.unsafe(query, params);
+      return result;
+    } catch (error) {
+      console.error("Error executing getAllStaffDashboard query:", error);
+      throw error;
+    }
+  }
+
   public async getStaffDashboard(data: any): Promise<any> {
     const query = `
-   SELECT DISTINCT ON (bsp.id)
+WITH customer_service_mapping AS (
+    SELECT 
+        customer_id, 
+        service_id 
+    FROM 
+        staffCustomerMapping 
+    WHERE 
+        staff_id = $1 -- Replace with actual staff_id
+)
+SELECT DISTINCT ON (bsp.id)
     bsp.*,
     s.name AS service_name,
     ss.name AS sub_service_name,
@@ -63,9 +149,11 @@ WHERE
     u.email AS user_email,
     u.phone_no AS user_phone
 FROM
-    mapStaffCustomer msc
-LEFT JOIN
-    BRIS_sole_proprietorship bsp ON msc.customer_id = bsp.user_id
+    customer_service_mapping csm
+JOIN
+    serviceRequest bsp 
+    ON csm.customer_id = bsp.user_id 
+    AND csm.service_id = bsp.service_id  -- Ensures only relevant service data
 LEFT JOIN
     services s ON bsp.service_id = s.id
 LEFT JOIN
@@ -73,8 +161,7 @@ LEFT JOIN
 LEFT JOIN 
     userData u ON u.user_id = bsp.user_id
 WHERE
-    msc.staff_id = $1
-    AND bsp.status = 'PENDING';
+    bsp.status IN ('PENDING', 'ASSIGNED', 'ACCEPTED');
     `;
 
     try {
@@ -87,16 +174,18 @@ WHERE
   }
 
   public async approveRejectServicesSubmission(
-    isApproved: boolean | string,
-    requestId: number
+    isAccepted: boolean | string,
+    requestId: number,
+    isSubmitted?: boolean
   ): Promise<any> {
     try {
-      const status =
-        isApproved == true || isApproved == "true"
-          ? STATUS.APPROVED
-          : STATUS.REJECTED;
+      const status = isSubmitted
+        ? STATUS.SUBMITTED
+        : isAccepted == true || isAccepted == "true"
+        ? STATUS.ACCEPTED
+        : STATUS.PENDING;
       return await sql`
-UPDATE bris_sole_proprietorship
+UPDATE serviceRequest
 SET status = ${status}::status_enum 
 WHERE id = ${requestId}
 RETURNING *;
@@ -114,7 +203,7 @@ RETURNING *;
   ): Promise<any> {
     try {
       return await sql`
-SELECT * FROM mapStaffCustomer WHERE staff_id = ${staff_id} AND customer_id = ${user_id};
+SELECT * FROM staffCustomerMapping WHERE staff_id = ${staff_id} AND customer_id = ${user_id};
 `;
     } catch (error) {
       console.log(error);
@@ -122,12 +211,10 @@ SELECT * FROM mapStaffCustomer WHERE staff_id = ${staff_id} AND customer_id = ${
     }
   }
 
-  public async getRequestDetails(
-    reqId: number
-  ): Promise<any> {
+  public async getRequestDetails(reqId: number): Promise<any> {
     try {
       return await sql`
-SELECT * FROM bris_sole_proprietorship WHERE id = ${reqId};
+SELECT * FROM serviceRequest WHERE id = ${reqId};
 `;
     } catch (error) {
       console.log(error);
@@ -141,7 +228,7 @@ SELECT * FROM bris_sole_proprietorship WHERE id = ${reqId};
   ): Promise<any> {
     try {
       return await sql`
-DELETE FROM mapStaffCustomer
+DELETE FROM staffCustomerMapping
 WHERE customer_id = ${customer_id}
 AND service_id = ${service_id}
 `;

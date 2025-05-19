@@ -10,13 +10,30 @@ const staffService = new StaffService();
 export class StaffController {
   constructor() {} // private staffService = new StaffUserService()
 
-  public async getAllStaffDashboard(req: Request, res: Response): Promise<void> {
+  public async getAssignedUserServiceData(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     try {
       const user = (req as any).user;
-      const data = await staffService.getAllStaffDashboard(user.user_id);
+      const data = await staffService.getAssignedUserServiceData(user.user_id);
       return sendSuccessResponse(res, "Success", data, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
+    }
+  }
+
+  public async searchUserServiceReport(req: Request, res: Response): Promise<void> {
+    try {
+      const user = (req as any).user;
+      const data = await staffService.searchUserServiceReport({
+        staff_id: user.user_id,
+        status: req.body.status == "NONE" ? null : req.body.status,
+        service_id: req.body.service_id == "NONE" ? null : req.body.service_id,
+      });
+      return sendSuccessResponse(res, "Success", data, 200);
+    } catch (error: any) {
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
@@ -26,22 +43,47 @@ export class StaffController {
       const data = await staffService.getStaffDashboard(user.user_id);
       return sendSuccessResponse(res, "Success", data, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 
-  public async approveRejectServicesSubmission(req: Request, res: Response): Promise<void> {
+  public async approveRejectServicesSubmission(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     try {
-      const data = sanitizeData(req.body)
+      const data = sanitizeData(req.body);
       const user = (req as any).user;
+
+      if (data.isAccepted && data.isSubmitted) {
+        return sendErrorResponse(
+          res,
+          "INVALID DATA, Cannot process data isAccepted and isSubmitted together.",
+          Error,
+          400
+        );
+      }
+
+      const isSubmitted = data.isSubmitted ? true : false;
+
+      if (isSubmitted && !data.isAccepted) {
+        const staffData = await staffService.approveRejectServicesSubmission(
+          user,
+          data.isAccepted,
+          data.requestId,
+          isSubmitted
+        );
+        return sendSuccessResponse(res, "Success", staffData, 200);
+      }
+
       const staffData = await staffService.approveRejectServicesSubmission(
         user,
-        data.isApproved,
+        data.isAccepted,
         data.requestId
       );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 400);
+      return sendErrorResponse(res, error.message, error, 200);
     }
   }
 }

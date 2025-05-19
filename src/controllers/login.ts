@@ -1,30 +1,23 @@
 import { Request, Response } from "express";
-import { LoginService } from "../services/login.service";
 import { verifyPassword } from "../utils/utils";
 import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "../middleware/responseHandeler";
 import { TokenService } from "../services/token.service";
+import { UserService } from "../services/user";
 
-const loginService = new LoginService();
+// const loginService = new LoginService();
+const userService = new UserService();
 const tokenService = new TokenService();
 export class LoginController {
   constructor() {}
 
-  public async getUserTypes(req: Request, res: Response): Promise<void> {
-    const userTypes = await loginService.getUserTypes();
-    res.status(200).json({
-      success: true,
-      message: "Success",
-      data: userTypes,
-    });
-  }
-
   public async login(req: Request, res: Response): Promise<any> {
     try {
       const { phone_no, password } = req.body;
-      const userData: any[] = await loginService.getUser(phone_no);
+      const userData: any[] = await userService.getUser(phone_no);
+      if(!userData) return sendErrorResponse(res, "User not found", null, 200);
       const verify = verifyPassword(
         password,
         userData[0].password,
@@ -39,11 +32,11 @@ export class LoginController {
         userData[0].refreshToken = refreshToken;
         return sendSuccessResponse(res, "User login successfully", userData[0]);
       }
-      return sendErrorResponse(res, "Invalid credentials", null, 401);
+      return sendErrorResponse(res, "Invalid credentials", null, 200);
     } catch (error) {
       console.log("=====login====");
       console.log(error);
-      return sendErrorResponse(res, "Invalid credentials", error, 401);
+      return sendErrorResponse(res, "Invalid credentials", error, 200);
     }
   }
 
@@ -52,7 +45,7 @@ export class LoginController {
       const { refreshToken } = req.body;
       const userRefreshTokenDate =
         tokenService.verifyRefreshToken(refreshToken);
-      const userData: any[] = await loginService.getUser(
+      const userData: any[] = await userService.getUser(
         userRefreshTokenDate.phone_no
       );
       delete userData[0].password;
@@ -69,7 +62,7 @@ export class LoginController {
     } catch (error) {
       console.log("=====generateRefreshToken====");
       console.log(error);
-      return sendErrorResponse(res, "Invalid credentials", error, 401);
+      return sendErrorResponse(res, "Invalid credentials", error, 200);
     }
   }
 }

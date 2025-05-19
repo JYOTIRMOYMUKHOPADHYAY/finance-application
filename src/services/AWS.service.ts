@@ -202,4 +202,32 @@ export class AWSService {
       throw error;
     }
   }
+
+  // async sendEmail(email_to: string, template: string): Promise<any> {
+  //   try{
+  //     const params = {
+  //       Destination: {
+  //         ToAddresses: [email_to],
+  //       },
+  //       Message: {
+  //         Body: {
+  //           Html: {
+  //             Charset: "UTF-8",
+  //             Data: template,
+  //           },
+  //         },
+  //         Subject: {
+  //           Charset: "UTF-8",
+  //           Data: "Finance App",
+  //         },
+  //       },
+  //       Source: process.env.EMAIL_FROM,
+  //     };
+  //     const command = new SendEmailCommand(params);
+  //     await this.sesClient.send(command);
+  //   } catch (error) {
+  //     console.error("Error sending email:", error);
+  //     throw error;
+  //   }
+  // }
 }
