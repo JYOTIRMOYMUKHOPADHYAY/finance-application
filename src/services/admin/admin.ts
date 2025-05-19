@@ -58,12 +58,14 @@ export class AdminService {
 
   public async approveRejectServicesSubmission(
     isApproved: boolean,
-    requestId: number
+    requestId: number,
+    adminUser: any
   ): Promise<any> {
     try {
       const data = await this.staffRepo.approveRejectServicesSubmission(
         isApproved,
-        requestId
+        requestId,
+        adminUser
       );
       return groupApplicationsByService(data);
     } catch (error) {

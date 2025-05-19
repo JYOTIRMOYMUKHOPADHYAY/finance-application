@@ -14,12 +14,12 @@ export interface Customer {
 export default class CustomerRepository {
   constructor() {}
 
-  public async serviceSubmission(data: Customer): Promise<any> {
+  public async serviceSubmission(data: Customer, userData: any): Promise<any> {
     try {
       return await sql`
         INSERT INTO serviceRequest(
-            user_id,service_id, sub_service_id, mobileNo, mailId, periodId, message, 
-            fileLink
+            user_id,service_id, sub_service_id, mobileNo, mailId, periodId, message,
+            fileLink, updated_by,updated_at
         ) 
         VALUES (
             ${Number(data.userId)},      
@@ -29,7 +29,9 @@ export default class CustomerRepository {
             ${data.mailId},    
             ${Number(data.periodId)},
             ${data.message},
-            ${data.fileLink}  
+            ${data.fileLink},
+            ${userData.user_id},
+            NOW()
         )
         RETURNING *;
     `;

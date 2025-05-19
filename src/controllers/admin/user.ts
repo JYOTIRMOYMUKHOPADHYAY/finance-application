@@ -45,24 +45,6 @@ export class CreateStaffController {
     }
   }
 
-  public async approveRejectServicesSubmission(
-    req: Request,
-    res: Response
-  ): Promise<void> {
-    try {
-      const data = sanitizeData(req.body);
-      const staffData = await staffService.approveRejectServicesSubmission(
-        data.isApproved,
-        data.requestId
-      );
-      return sendSuccessResponse(res, "Success", staffData, 200);
-    } catch (error: any) {
-      return sendErrorResponse(res, error.message, error, 200);
-    }
-  }
-
-
-
   public async mapStaffCustomer(req: Request, res: Response): Promise<void> {
     try {
       const staffData = await staffService.mapStaffCustomer(

@@ -52,9 +52,11 @@ export class AdminController {
   ): Promise<void> {
     try {
       const data = sanitizeData(req.body);
+      const adminUser = (req as any).user;
       const staffData = await adminService.approveRejectServicesSubmission(
         data.isApproved,
-        data.requestId
+        data.requestId,
+        adminUser
       );
       return sendSuccessResponse(res, "Success", staffData, 200);
     } catch (error: any) {

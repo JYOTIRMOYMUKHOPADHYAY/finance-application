@@ -25,7 +25,8 @@ export class CustomerService {
         fileLink: uploadData.zipFile,
       };
       return await this.customerRepo.serviceSubmission(
-        registrationDetails
+        registrationDetails,
+        userData
       );
     } catch (error) {
       console.log("====Service Error: soleProprietorship====");

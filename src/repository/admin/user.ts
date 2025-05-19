@@ -142,7 +142,8 @@ export default class UserRepository {
   }
   public async approveRejectServicesSubmission(
     isApproved: boolean | string,
-    requestId: number
+    requestId: number,
+    adminUser: any
   ): Promise<any> {
     try {
       const status =
@@ -151,7 +152,9 @@ export default class UserRepository {
           : STATUS.REJECTED;
       return await sql`
 UPDATE serviceRequest
-SET status = ${status}::status_enum 
+SET status = ${status}::status_enum,
+  updated_by = ${adminUser.user_id},
+  updated_at = NOW()
 WHERE id = ${requestId}
 RETURNING *;
 

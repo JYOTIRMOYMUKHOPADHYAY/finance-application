@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { validator } from "../middleware/schemaValidator";
-import { CreateStaffController } from "../controllers/admin/user";
 import {
   createUserValidationSchema,
   updateReviewerUserValidationSchema,
@@ -12,7 +11,6 @@ import { CreateReviewerController } from "../controllers/admin/reviewer";
 import { AdminController } from "../controllers/admin/admin";
 
 const admin_route = Router();
-const createStaffControllerData = new CreateStaffController();
 const createReviewerController = new CreateReviewerController();
 const newsUpdatesController = new UpdateNewsController();
 const adminController = new AdminController();
