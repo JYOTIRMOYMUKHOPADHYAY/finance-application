@@ -107,6 +107,7 @@ export class GeneralController {
 
     public async applyForJob(req: Request, res: Response): Promise<any> {
     const data = sanitizeData(req.body);
+    console.log(data)
     if (!req.file) {
       return sendErrorResponse(
         res,

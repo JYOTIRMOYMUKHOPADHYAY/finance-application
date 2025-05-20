@@ -103,6 +103,7 @@ SELECT * FROM ComplianceCalenderData WHERE compliance_date_id = ${id} ORDER BY d
   }
 
     public async applyForJob(data: any): Promise<any> {
+      console.log(data)
     try {
       return await sql`
       INSERT INTO applyToJob (
